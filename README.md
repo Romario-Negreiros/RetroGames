@@ -1,34 +1,82 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<div align="center">
+<img width="200" src="public/logo.svg" alt="RetroGames"/>
 
-## Getting Started
+# RetroGames
 
-First, run the development server:
+![NextJS](https://img.shields.io/badge/nextjs-v12.1.6-blue.svg)
+![Contributions welcome](https://img.shields.io/badge/contributions-welcome-green.svg)
+
+:star: Star me on GitHub!
+</div>
+
+## Overview
+
+The idea of RetroGames is to reproduce old and classic games and make them
+playable online!
+
+## Table of contents
+
+- [Screenshots](#screenshots)
+- [Progress](#progress)
+- [Packages](#packages)
+- [Contributing](#contributing)
+- [Useful links](#useful-links)
+- [Author](#author)
+
+## Screenshots
+
+[(Back to top)](#table-of-contents)
+
+Soon...
+
+## Progress
+
+[(Back to top)](#table-of-contents)
+
+Soon...
+
+## Packages
+
+[(Back to top)](#table-of-contents)
+
+Soon...
+
+## Contributing
+
+[(Back to top)](#table-of-contents)
 
 ```bash
-npm run dev
-# or
-yarn dev
+    >> Fork this repository
+
+    >> Clone the repository to your local system
+    git clone https://github.com/athityakumar/colorls
+
+    >> Create a new branch containing your feature
+    git checkout -b feature
+
+    >> Commit your changes
+    git commit -m "new feature"
+
+    >> Push to your branch
+    git push origin feature
+
+    >> Once you push your changes, click the compare && pull request button in your github
+
+    >> Click the create pull request button
+
+    >> After your pull request's merge has been done, you can delete your branch
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Useful links
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+[(Back to top)](#table-of-contents)
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- [Logo maker](https://howtostartanllc.com/logo-maker/)
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Author
 
-## Learn More
+[(Back to top)](#table-of-contents)
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- [LinkedIn](https://www.linkedin.com/in/romario-negreiros-8591b6214)
+- [Website](https://romario-negreiros.github.io/Romario-frontend/)
+- [Frontend Mentor](https://www.frontendmentor.io/profile/Romario-Negreiros)
