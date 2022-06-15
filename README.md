@@ -49,7 +49,7 @@ Soon...
     >> Fork this repository
 
     >> Clone the repository to your local system
-    git clone https://github.com/athityakumar/colorls
+    git clone https://github.com/Romario-Negreiros/RetroGames.git
 
     >> Create a new branch containing your feature
     git checkout -b feature
