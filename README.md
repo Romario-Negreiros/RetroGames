@@ -64,7 +64,7 @@ Soon...
 
     >> Click the create pull request button
 
-    >> After your pull request's merge has been done, you can delete your branch
+    >> After your pull request\'s merge has been done, you can delete your branch
 ```
 
 ## Useful links
