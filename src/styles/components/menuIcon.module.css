@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+  position: fixed;
+  top: 2.3rem;
+  right: 2rem;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.container span {
+  display: block;
+  width: 1.5rem;
+  height: .2rem;
+  background-color: var(--primary-hover);
+  transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+}
+
+.close_left {
+  transform: translate(0, .6rem) rotate(45deg);
+}
+
+.close_right {
+  transform: rotate(135deg);
+}
+
+.fade {
+  opacity: 0;
+}
+  
+@media screen and (min-width: 600px) {
+  .container {
+    display: none;
+  }
+}
