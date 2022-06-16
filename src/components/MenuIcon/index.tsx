@@ -9,15 +9,15 @@ interface Props {
 
 const MenuIcon: React.FC<Props> = ({ handleMobileMenu, isMenuOpen }) => {
   return (
-    <div className={styles.container} onClick={() => handleMobileMenu()}>
-      <span
-        className={`${styles.first} ${isMenuOpen && styles.close_left}`}
-      ></span>
-      <span
-        className={`${styles.second} ${isMenuOpen && styles.close_right}`}
-      ></span>
-      <span className={`${styles.third} ${isMenuOpen && styles.fade}`}></span>
-    </div>
+    <button
+      className={styles.container}
+      aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+      onClick={() => handleMobileMenu()}
+    >
+      <span className={`${isMenuOpen && styles.close_left}`}></span>
+      <span className={`${isMenuOpen && styles.close_right}`}></span>
+      <span className={`${isMenuOpen && styles.fade}`}></span>
+    </button>
   )
 }
 
