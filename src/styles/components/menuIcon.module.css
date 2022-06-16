@@ -7,6 +7,8 @@
   right: 2rem;
   z-index: 2;
   cursor: pointer;
+  background-color: transparent;
+  border: 0 none;
 }
 
 .container span {
