@@ -18,11 +18,11 @@ const Layout: React.FC<Props> = ({ children }) => {
           content="RetroGames is a website you can play all the old games you've ever played, but online!"
         />
         <meta name="keywords" content="Games, Online" />
-        {/* <meta name="theme-color" content="#8257e5" /> */}
+        <meta name="theme-color" content="#121212" />
       </Head>
 
       <Header />
-      {children}
+      <main className="body_container">{children}</main>
     </>
   )
 }
