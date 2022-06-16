@@ -1,7 +1,10 @@
 node_modules
 .next
-.node_modules
 package-lock.json
 package.json
 next-env.d.ts
+.eslintrc.json
+.prettierrc.json
+/*.js
 tsconfig.json
+README.md
