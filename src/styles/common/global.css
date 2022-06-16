@@ -1,0 +1,90 @@
+.body_container {
+  padding: 2rem 1rem;
+}
+
+._404_or_500_pages_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 2rem;
+  min-height: calc(100vh - 100px);
+}
+
+._404_or_500_pages_container h1 {
+  font-size: 2.4rem;
+  color: var(--primary-font);
+}
+
+._404_or_500_pages_container p {
+  font-size: 1.8rem;
+  color: var(--secondary-font);
+  max-width: 500px;
+}
+
+.form_wrapper {
+  display: grid;
+  place-items: center;
+  min-height: calc(100vh - 100px);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 4rem;
+  padding: 2rem;
+  margin: auto;
+  width: 100%;
+  max-width: 500px;
+  min-height: calc((100vh - 100px) / 2);
+  border-radius: 3px;
+  background-color: var(--tertiary-bg);
+}
+
+.form_inner_content_wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+form input,
+form button {
+  border: 1px solid transparent;
+  outline: 0;
+  border-radius: 3px;
+  background-color: var(--quaternary-bg);
+  width: 100%;
+  padding: 1rem 0.8rem;
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: var(--secondary-font);
+  transition: border-color 0.4s ease-in-out;
+}
+
+form input:hover,
+form input:focus,
+form button:hover {
+  border-color: var(--primary-hover);
+}
+
+form button {
+  background-color: var(--primary-bg);
+}
+
+form a {
+  color: var(--secondary-font);
+  margin: auto;
+  font-size: 1.6rem;
+}
+
+form a:hover {
+  text-decoration: underline;
+}
+
+@media screen and (min-width: 600px) {
+  .body_container {
+    padding: 2rem 4rem;
+  }
+}
