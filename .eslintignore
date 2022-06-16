@@ -1,3 +1,11 @@
 node_modules
 .next
 /*.js
+package-lock.json
+package.json
+next-env.d.ts
+.eslintrc.json
+.prettierrc.json
+/*.js
+tsconfig.json
+README.md
