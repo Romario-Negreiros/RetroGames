@@ -46,15 +46,13 @@ const Header: React.FC = () => {
         >
           {navItems.map(item => (
             <li key={item.text}>
-              {item.url
-                ? (
+              {item.url ? (
                 <Link href={item.url}>
                   <a>{item.text}</a>
                 </Link>
-                  )
-                : (
-                    item.text
-                  )}
+              ) : (
+                item.text
+              )}
             </li>
           ))}
         </ul>

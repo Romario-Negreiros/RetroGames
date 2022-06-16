@@ -1,11 +1,11 @@
 :root {
   --primary-bg: #121212;
   --secondary-bg: #292929;
-  --tertiary-bg: #20232A;
-  --quaternary-bg: #282C34;
+  --tertiary-bg: #20232a;
+  --quaternary-bg: #282c34;
 
   --primary-font: #282c34;
   --secondary-font: #ffffff;
 
-  --primary-hover: #FF0000;
+  --primary-hover: #ff0000;
 }

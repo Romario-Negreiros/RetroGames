@@ -9,7 +9,8 @@
     "next/core-web-vitals",
     "plugin:react/recommended",
     "standard",
-    "plugin:@next/next/recommended"
+    "plugin:@next/next/recommended",
+    "prettier"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
