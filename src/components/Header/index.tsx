@@ -6,7 +6,14 @@ import Link from 'next/link'
 
 import styles from '@styles/components/header.module.css'
 
-const navItems = [
+interface Item {
+  text: string
+  url?: string
+  onClick?: () => void
+  disabled?: boolean
+}
+
+const navItems: Item[] = [
   {
     text: 'Home',
     url: '/'
@@ -17,10 +24,12 @@ const navItems = [
   },
   {
     text: 'Log in',
-    url: '/login'
+    url: '/login',
+    disabled: false
   },
   {
-    text: 'Log off'
+    text: 'Log off',
+    disabled: true
   }
 ]
 
@@ -28,10 +37,16 @@ const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
 
   const handleMobileMenu = () => {
-    if (window.innerWidth <= 550) {
+    if (window.innerWidth <= 600) {
       setIsMenuOpen(!isMenuOpen)
     }
   }
+
+  const handleClickOnNavItem = (item: Item) => {
+    handleMobileMenu()
+    if (item.onClick) item.onClick()
+  }
+
   return (
     <header className={styles.container}>
       <section>
@@ -44,17 +59,21 @@ const Header: React.FC = () => {
             isMenuOpen && styles.nav_list_container_active
           }`}
         >
-          {navItems.map(item => (
-            <li key={item.text}>
-              {item.url ? (
-                <Link href={item.url}>
-                  <a>{item.text}</a>
-                </Link>
-              ) : (
-                item.text
-              )}
-            </li>
-          ))}
+          {navItems.map(item => {
+            if (!item.disabled) {
+              return (
+                <li key={item.text} onClick={() => handleClickOnNavItem(item)}>
+                  {item.url ? (
+                    <Link href={item.url}>
+                      <a>{item.text}</a>
+                    </Link>
+                  ) : (
+                    item.text
+                  )}
+                </li>
+              )
+            } else return null
+          })}
         </ul>
       </nav>
     </header>
