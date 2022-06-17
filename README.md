@@ -38,9 +38,11 @@ Soon...
 
 ## Packages
 
-[(Back to top)](#table-of-contents)
+[(Back to top)](#table-of-contents)- 
 
-Soon...
+- [Firebase](https://www.npmjs.com/package/firebase)
+- [React Hook Form](https://react-hook-form.com)
+- [Sharp](https://sharp.pixelplumbing.com)
 
 ## Contributing
 
