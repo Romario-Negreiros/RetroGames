@@ -60,13 +60,17 @@ form button {
   font-size: 1.6rem;
   cursor: pointer;
   color: var(--secondary-font);
-  transition: border-color 0.4s ease-in-out;
 }
 
 form input:hover,
 form input:focus,
 form button:hover {
   border-color: var(--primary-hover);
+}
+
+form p {
+  font-size: 1.6rem;
+  color: var(--primary-hover);
 }
 
 form button {
