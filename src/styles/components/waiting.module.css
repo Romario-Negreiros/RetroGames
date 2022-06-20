@@ -22,8 +22,8 @@
 
 .container div::after {
   content: '';
-  width: 25vw;
-  height: 25vw;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   border: 10px solid var(--primary-bg);
   border-top: 10px solid var(--primary-hover);
