@@ -23,7 +23,7 @@
   max-width: 500px;
 }
 
-.form_wrapper {
+.full_screen_height_wrapper {
   display: grid;
   place-items: center;
   min-height: calc(100vh - 100px);
@@ -49,8 +49,8 @@ form {
   gap: 2rem;
 }
 
-form input,
-form button {
+.input,
+.button {
   border: 1px solid transparent;
   outline: 0;
   border-radius: 3px;
@@ -62,9 +62,9 @@ form button {
   color: var(--secondary-font);
 }
 
-form input:hover,
-form input:focus,
-form button:hover {
+.input:hover,
+.input:focus,
+.button:hover {
   border-color: var(--primary-hover);
 }
 
@@ -73,7 +73,7 @@ form p {
   color: var(--primary-hover);
 }
 
-form button {
+.button {
   background-color: var(--primary-bg);
 }
 
