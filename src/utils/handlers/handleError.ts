@@ -6,10 +6,10 @@ const handleError = (error: unknown, action: string, setError: (error: string) =
   const defaultUserErrorMessage = 'Looks like something went wrong, if the error persists, try again after a while!'
 
   if (error instanceof Error) {
-    const getErrorCode = error.message.match(/[(]{1}[a-z]+[/]{1}[a-z-]+[)]{1}/)
+    const firebaseError = error.message.match(/[(]{1}[a-z]+[/]{1}[a-z-]+[)]{1}/)
 
-    if (getErrorCode) {
-      const message = getErrorCode[0].substring(1, getErrorCode[0].length - 1) // remove parentheses from message
+    if (firebaseError) {
+      const message = firebaseError[0].substring(1, firebaseError[0].length - 1) // remove parentheses from message
 
       switch (message) {
         case AuthErrorCodes.NETWORK_REQUEST_FAILED:
@@ -39,7 +39,7 @@ const handleError = (error: unknown, action: string, setError: (error: string) =
       setError(error.message)
     }
   } else {
-    console.error(joinErrMsgAndAction('Unknown authentication error', action))
+    console.error(joinErrMsgAndAction('Unknown error', action))
     setError(defaultUserErrorMessage)
   }
 }
