@@ -1,0 +1,45 @@
+@keyframes fillBar {
+  from {
+    width: current;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10; /* bigger than menu icon z-index, which is 9 */
+  width: 100%;
+  max-width: 400px;
+  min-height: 100px;
+  transition: transform .6s ease-in-out;
+  background-color: var(--tertiary-bg); 
+}
+
+.container p {
+  padding: 1rem;
+  font-size: 1.4rem;
+  color: var(--secondary-font);
+}
+
+.progress {
+  width: 100%;
+  height: 5px;
+  background-color: var(--quaternary-bg);
+}
+
+.progress div {
+  width: 0%;
+  height: 100%;
+  background-color: var(--primary-hover);
+}
+
+.animate_bar {
+  animation: fillBar 3s linear;
+}
