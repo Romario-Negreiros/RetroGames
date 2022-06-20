@@ -1,0 +1,36 @@
+@keyframes spin {
+  to {
+    transform: rotate(1turn)
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.container div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container div::after {
+  content: '';
+  width: 25vw;
+  height: 25vw;
+  border-radius: 50%;
+  border: 10px solid var(--primary-bg);
+  border-top: 10px solid var(--primary-hover);
+  animation: spin 1s linear infinite;
+}
+
+.container p {
+  font-size: 2rem;
+  color: var(--secondary-font);
+}
