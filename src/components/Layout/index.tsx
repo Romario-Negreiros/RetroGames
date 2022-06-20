@@ -4,7 +4,7 @@ import Header from '../Header'
 import Head from 'next/head'
 
 interface Props {
-  children: React.ReactElement
+  children: React.ReactNode
 }
 
 const Layout: React.FC<Props> = ({ children }) => {
