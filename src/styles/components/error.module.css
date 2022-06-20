@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.container h1 {
+  font-size: 3rem;
+  color: var(--primary-font);
+  text-decoration: underline var(--primary-hover);
+}
+
+.container p {
+  font-size: 2rem;
+  color: var(--secondary-font);
+}
