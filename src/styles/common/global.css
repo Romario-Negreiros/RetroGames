@@ -58,13 +58,13 @@ form {
   width: 100%;
   padding: 1rem 0.8rem;
   font-size: 1.6rem;
-  cursor: pointer;
   color: var(--secondary-font);
 }
 
 .input:hover,
 .input:focus,
-.button:hover {
+.button:hover,
+.button:focus {
   border-color: var(--primary-hover);
 }
 
@@ -75,6 +75,16 @@ form p {
 
 .button {
   background-color: var(--primary-bg);
+  cursor: pointer;
+}
+
+.button[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.button[disabled]:hover {
+  border-color: transparent;
 }
 
 form a {
