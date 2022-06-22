@@ -36,7 +36,7 @@
   width: 100%;
 }
 
-.nav_list_container li:hover {
+.nav_list_container li a:hover {
   cursor: pointer;
   color: var(--primary-hover);
 }
