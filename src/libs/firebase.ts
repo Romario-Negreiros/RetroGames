@@ -2,7 +2,7 @@
 
 import { initializeApp } from 'firebase/app'
 
-import { getAuth, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink } from 'firebase/auth'
+import { getAuth, sendSignInLinkToEmail, fetchSignInMethodsForEmail, isSignInWithEmailLink, signInWithEmailLink } from 'firebase/auth'
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
@@ -20,7 +20,8 @@ const firebase = {
     instance: getAuth(app),
     sendSignInLinkToEmail,
     signInWithEmailLink,
-    isSignInWithEmailLink
+    isSignInWithEmailLink,
+    fetchSignInMethodsForEmail
   }
 }
 
