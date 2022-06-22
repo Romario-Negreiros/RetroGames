@@ -30,7 +30,7 @@ const CreateAccount: NextPage = () => {
     try {
       setIsLoaded(false)
       if (!(await verifyIfEmailAlreadyExists(email))) {
-        await sendSignInLinkToEmail(email)
+        await sendSignInLinkToEmail(email, name)
         handleToast(
           ` Please, click on the link sent to your email to complete the 
           account creation, make sure to check your spam box too!

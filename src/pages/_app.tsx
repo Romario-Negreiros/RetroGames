@@ -24,8 +24,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   React.useEffect(() => {
     const unsubscribe = firebase.auth.instance.onAuthStateChanged(
       user => {
-        console.log(user)
-        // setUser(user as User)
+        setUser(user as User)
       },
       error => {
         handleError(error, 'Auth state listener', undefined, setToast)

@@ -54,11 +54,7 @@ const Header: React.FC = () => {
       </section>
       <nav>
         <MenuIcon handleMobileMenu={handleMobileMenu} isMenuOpen={isMenuOpen} />
-        <ul
-          className={`${styles.nav_list_container} ${
-            isMenuOpen && styles.nav_list_container_active
-          }`}
-        >
+        <ul className={`${styles.nav_list_container} ${isMenuOpen && styles.nav_list_container_active}`}>
           {navItems.map(item => {
             if (!item.disabled) {
               return (

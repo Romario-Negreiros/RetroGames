@@ -14,7 +14,9 @@ const Error: React.FC<Props> = ({ error, setError }) => {
     <section className={styles.container}>
       <h1>Error</h1>
       <p>{error}</p>
-      <button className="button" onClick={dismiss}>Dismiss</button>
+      <button className="button" onClick={dismiss}>
+        Dismiss
+      </button>
     </section>
   )
 }
