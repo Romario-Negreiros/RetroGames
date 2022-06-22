@@ -75,6 +75,7 @@ Soon...
 [(Back to top)](#table-of-contents)
 
 - [Logo maker](https://howtostartanllc.com/logo-maker/)
+- [React component renders twice](https://mariosfakiolas.com/blog/my-react-components-render-twice-and-drive-me-crazy/)
 
 ## Author
 
