@@ -5,7 +5,12 @@ import { IToast } from '@contexts/toastContext'
 
 import { AuthErrorCodes } from 'firebase/auth'
 
-const handleError = (error: unknown, action: string, setError?: (error: string) => void, setToast?: (toast: IToast) => void) => {
+const handleError = (
+  error: unknown,
+  action: string,
+  setError?: (error: string) => void,
+  setToast?: (toast: IToast) => void
+) => {
   const defaultUserErrorMessage = 'Looks like something went wrong, if the error persists, try again after a while!'
 
   const setErrorOrToast = (message: string) => {
@@ -40,6 +45,9 @@ const handleError = (error: unknown, action: string, setError?: (error: string) 
           break
         case AuthErrorCodes.CREDENTIAL_TOO_OLD_LOGIN_AGAIN:
           setErrorOrToast('Your need to sign in again to complete this operation!')
+          break
+        case AuthErrorCodes.INVALID_EMAIL:
+          setErrorOrToast("We couldn't complete the action because the email provided doesn't match our records!")
           break
         case 'auth/invalid-action-code':
           setErrorOrToast('The link or code has already been used, or has expired!')
