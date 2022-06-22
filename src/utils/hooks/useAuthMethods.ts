@@ -5,12 +5,12 @@ import { ActionCodeSettings } from 'firebase/auth'
 const useAuthMethods = () => {
   const { auth } = firebase
 
-  const actionCodeSettings: ActionCodeSettings = {
-    url: 'http://localhost:3000/',
-    handleCodeInApp: true
-  }
+  const sendSignInLinkToEmail = async (email: string, name?: string) => {
+    const actionCodeSettings: ActionCodeSettings = {
+      url: `http://localhost:3000/?name=${name}`,
+      handleCodeInApp: true
+    }
 
-  const sendSignInLinkToEmail = async (email: string) => {
     await auth.sendSignInLinkToEmail(auth.instance, email, actionCodeSettings)
     window.localStorage.setItem('email', email)
   }
@@ -27,9 +27,7 @@ const useAuthMethods = () => {
       email = window.prompt('Please, provide your email for confirmation:')
 
       if (!email) {
-        throw new Error(
-          'Unable to complete the log in, no email for confirmation was provided!'
-        )
+        throw new Error('Unable to complete the log in, no email for confirmation was provided!')
       }
 
       await signInWithEmailLink(email)
