@@ -20,11 +20,17 @@ const Toast: React.FC = () => {
     transform: toast.isOpened ? 'translateX(0)' : 'translateX(-400px)'
   }
 
+  const progressBarAnimationDuration = {
+    animationDuration: `${toast.timeToCloseInMs / 1000}s`,
+    MozAnimationDuration: `${toast.timeToCloseInMs / 1000}s`,
+    OAnimationDuration: `${toast.timeToCloseInMs / 1000}s`
+  }
+
   return (
     <div className={styles.container} style={containerAnimation}>
       <p>{toast.message}</p>
       <div className={styles.progress}>
-        <div></div>
+        <div style={progressBarAnimationDuration}></div>
       </div>
     </div>
   )
