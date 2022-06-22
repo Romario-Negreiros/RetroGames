@@ -24,7 +24,7 @@
 
 .container p {
   padding: 1rem;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   color: var(--secondary-font);
 }
 
@@ -41,5 +41,10 @@
 }
 
 .animate_bar {
-  animation: fillBar 3s linear;
+  animation-name: fillBar;
+  animation-timing-function: linear;
+  -o-animation-name: fillBar;
+  -o-animation-timing-function: linear;
+  -moz-animation-name: fillBar;
+  -moz-animation-timing-function: linear;
 }
