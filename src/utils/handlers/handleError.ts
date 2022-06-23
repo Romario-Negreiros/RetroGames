@@ -44,7 +44,7 @@ const handleError = (
           setErrorOrToast('This user has been deleted!')
           break
         case AuthErrorCodes.CREDENTIAL_TOO_OLD_LOGIN_AGAIN:
-          setErrorOrToast('Your need to sign in again to complete this operation!')
+          setErrorOrToast('You need to sign in again to complete this operation!')
           break
         case AuthErrorCodes.INVALID_EMAIL:
           setErrorOrToast("We couldn't complete the action because the email provided doesn't match our records!")
