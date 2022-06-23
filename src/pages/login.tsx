@@ -4,7 +4,7 @@ import { useAuthMethods, useToast } from '@utils/hooks'
 import { handleError, handleToast } from '@utils/handlers'
 
 import Link from 'next/link'
-import { Error, Waiting } from '../components'
+import { Error as ErrorComponent, Waiting } from '../components'
 
 import type { NextPage } from 'next'
 
@@ -16,7 +16,7 @@ const Login: NextPage = () => {
   const [error, setError] = React.useState('')
   const [isLoaded, setIsLoaded] = React.useState(true)
   const { setToast } = useToast()
-  const { sendSignInLinkToEmail } = useAuthMethods()
+  const { sendSignInLinkToEmail, verifyIfEmailAlreadyExists } = useAuthMethods()
   const {
     register,
     handleSubmit,
@@ -26,14 +26,18 @@ const Login: NextPage = () => {
   const onSubmit: SubmitHandler<Inputs> = async ({ email }) => {
     try {
       setIsLoaded(false)
-      await sendSignInLinkToEmail(email)
-      handleToast(
-        ` Please, click on the link sent to your email to complete the 
+      if (await verifyIfEmailAlreadyExists(email)) {
+        await sendSignInLinkToEmail(email)
+        handleToast(
+          ` Please, click on the link sent to your email to complete the 
         log in, make sure to check your spam box too!
         `,
-        setToast,
-        10000
-      )
+          setToast,
+          10000
+        )
+        return
+      }
+      throw new Error('This account doesn\'t exist!')
     } catch (err) {
       handleError(err, 'Logging in', setError)
     } finally {
@@ -50,7 +54,7 @@ const Login: NextPage = () => {
   } else if (error) {
     return (
       <section className="full_screen_height_wrapper">
-        <Error error={error} setError={setError} />
+        <ErrorComponent error={error} setError={setError} />
       </section>
     )
   }
@@ -75,7 +79,9 @@ const Login: NextPage = () => {
           </div>
         </section>
         <section className="form_inner_content_wrapper">
-          <button className="button" disabled={Boolean(window?.localStorage.getItem('email'))}>Log in</button>
+          <button className="button" disabled={Boolean(window?.localStorage.getItem('email'))}>
+            Log in
+          </button>
           <Link href="create_account">
             <a>Create account</a>
           </Link>
