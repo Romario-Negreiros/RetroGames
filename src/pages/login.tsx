@@ -34,11 +34,9 @@ const Login: NextPage = () => {
         setToast,
         10000
       )
-      setIsLoaded(true)
-      const submitBtn = document.querySelector('.button') as HTMLButtonElement
-      submitBtn.disabled = true
     } catch (err) {
       handleError(err, 'Logging in', setError)
+    } finally {
       setIsLoaded(true)
     }
   }
@@ -77,7 +75,7 @@ const Login: NextPage = () => {
           </div>
         </section>
         <section className="form_inner_content_wrapper">
-          <button className="button">Log in</button>
+          <button className="button" disabled={Boolean(window?.localStorage.getItem('email'))}>Log in</button>
           <Link href="create_account">
             <a>Create account</a>
           </Link>

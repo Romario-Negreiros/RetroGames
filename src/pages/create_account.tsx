@@ -38,14 +38,12 @@ const CreateAccount: NextPage = () => {
           setToast,
           10000
         )
-        setIsLoaded(true)
-        const submitBtn = document.querySelector('.button') as HTMLButtonElement
-        submitBtn.disabled = true
         return
       }
       throw new Error(`(${AuthErrorCodes.EMAIL_EXISTS})`)
     } catch (err) {
       handleError(err, 'Creating new account', setError)
+    } finally {
       setIsLoaded(true)
     }
   }
@@ -102,7 +100,7 @@ const CreateAccount: NextPage = () => {
           </div>
         </section>
         <section className="form_inner_content_wrapper">
-          <button className="button">Submit</button>
+          <button className="button" disabled={Boolean(window?.localStorage.getItem('email'))}>Submit</button>
           <Link href="/login">
             <a>Log in instead</a>
           </Link>
