@@ -1,26 +1,25 @@
 import React from 'react'
 import firebase from '../libs/firebase'
-import { useToast, useAuthMethods, useAuth } from '@utils/hooks'
+import { useToast, useAuthMethods, useFirestore } from '@utils/hooks'
 import { handleError, handleToast } from '@utils/handlers'
-import { useRouter } from 'next/router'
 
 import type { NextPage } from 'next'
 
 const Home: NextPage = () => {
-  const { user } = useAuth()
   const { setToast } = useToast()
-  const { query } = useRouter()
   const { finishSignInWithEmailLink } = useAuthMethods()
+  const { setDoc } = useFirestore()
+
   React.useEffect(() => {
     const { auth } = firebase
     if (auth.isSignInWithEmailLink(auth.instance, window.location.href)) {
       ;(async () => {
         try {
-          console.log(user)
+          const params = new URLSearchParams(window?.location.search)
+          const name = params.get('name')
           await finishSignInWithEmailLink()
-          console.log(user)
-          if (query.name) {
-            // await setDocument(name)
+          if (name) {
+            await setDoc(['users'], name, { name })
           }
         } catch (err) {
           handleError(err, 'Complete log in or account creation with email link', undefined, setToast)
