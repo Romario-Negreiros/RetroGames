@@ -5,7 +5,8 @@ import {
   sendSignInLinkToEmail,
   fetchSignInMethodsForEmail,
   isSignInWithEmailLink,
-  signInWithEmailLink
+  signInWithEmailLink,
+  updateProfile
 } from 'firebase/auth'
 
 import {
@@ -39,7 +40,8 @@ const firebase = {
     sendSignInLinkToEmail,
     signInWithEmailLink,
     isSignInWithEmailLink,
-    fetchSignInMethodsForEmail
+    fetchSignInMethodsForEmail,
+    updateProfile
   },
 
   firestore: {
