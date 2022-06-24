@@ -7,19 +7,20 @@ import type { NextPage } from 'next'
 
 const Home: NextPage = () => {
   const { setToast } = useToast()
-  const { finishSignInWithEmailLink } = useAuthMethods()
+  const { finishSignInWithEmailLink, updateProfile } = useAuthMethods()
   const { setDoc } = useFirestore()
 
   React.useEffect(() => {
     const { auth } = firebase
-    if (auth.isSignInWithEmailLink(auth.instance, window.location.href)) {
+    if (auth.isSignInWithEmailLink(auth.instance, window?.location.href)) {
       ;(async () => {
         try {
           const params = new URLSearchParams(window?.location.search)
           const name = params.get('name')
-          await finishSignInWithEmailLink()
+          const user = await finishSignInWithEmailLink()
           if (name) {
-            await setDoc(['users'], name, { name })
+            await updateProfile(user, { displayName: name })
+            await setDoc(['users'], name, { deuCerto: true })
           }
         } catch (err) {
           handleError(err, 'Complete log in or account creation with email link', undefined, setToast)
@@ -32,7 +33,7 @@ const Home: NextPage = () => {
   return (
     <div>
       hello world!
-      <button onClick={() => handleToast('toast mano', setToast)}>toast zao</button>
+      <button onClick={() => handleToast('toast bro', setToast)}>ppppp</button>
     </div>
   )
 }
