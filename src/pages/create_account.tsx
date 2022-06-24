@@ -100,7 +100,12 @@ const CreateAccount: NextPage = () => {
           </div>
         </section>
         <section className="form_inner_content_wrapper">
-          <button className="button" disabled={Boolean(window?.localStorage.getItem('email'))}>Submit</button>
+          <button
+            className="button"
+            disabled={Boolean(typeof window !== 'undefined' ? window.localStorage.getItem('email') : false)}
+          >
+            Submit
+          </button>
           <Link href="/login">
             <a>Log in instead</a>
           </Link>

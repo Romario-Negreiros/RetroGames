@@ -37,7 +37,7 @@ const Login: NextPage = () => {
         )
         return
       }
-      throw new Error('This account doesn\'t exist!')
+      throw new Error("This account doesn't exist!")
     } catch (err) {
       handleError(err, 'Logging in', setError)
     } finally {
@@ -79,7 +79,10 @@ const Login: NextPage = () => {
           </div>
         </section>
         <section className="form_inner_content_wrapper">
-          <button className="button" disabled={Boolean(window?.localStorage.getItem('email'))}>
+          <button
+            className="button"
+            disabled={Boolean(typeof window !== 'undefined' ? window.localStorage.getItem('email') : false)}
+          >
             Log in
           </button>
           <Link href="create_account">

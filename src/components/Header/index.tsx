@@ -37,7 +37,7 @@ const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
 
   const handleMobileMenu = () => {
-    if (window.innerWidth <= 600) {
+    if (typeof window !== 'undefined' && window.innerWidth <= 600) {
       setIsMenuOpen(!isMenuOpen)
     }
   }
