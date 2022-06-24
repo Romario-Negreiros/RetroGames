@@ -1,5 +1,3 @@
-// https://firebase.google.com/docs/auth/web/email-link-auth?authuser=0&hl=pt
-
 import { initializeApp } from 'firebase/app'
 
 import {
