@@ -2,7 +2,15 @@ import firebase from '../../libs/firebase'
 
 import { joinPathSegmentsWithSlash } from '@utils/helpers'
 
-import { CollectionReference, DocumentData, WithFieldValue, FieldPath, WhereFilterOp } from 'firebase/firestore'
+import {
+  CollectionReference,
+  DocumentData,
+  WithFieldValue,
+  FieldPath,
+  WhereFilterOp,
+  DocumentReference,
+  Query
+} from 'firebase/firestore'
 
 type WhereArgs = [fieldPath: string | FieldPath, opStr: WhereFilterOp, value: unknown]
 
@@ -26,16 +34,16 @@ const useFirestore = () => {
     return firestore.query(collection, firestore.where(...whereArgs))
   }
 
-  const getDocs = async (pathSegments: string[], whereArgs: WhereArgs, limit?: number) => {
+  const getDocs = async <I>(pathSegments: string[], whereArgs: WhereArgs, limit?: number) => {
     const collection = getCollection(pathSegments)
     const query = createQuery(collection, whereArgs, limit)
-    const results = await firestore.getDocs(query)
+    const results = await firestore.getDocs<I>(query as Query<I>)
     return results
   }
 
-  const getDoc = async (pathSegments: string[], docId: string) => {
+  const getDoc = async <I>(pathSegments: string[], docId: string) => {
     const doc = getDocReference(pathSegments, docId)
-    const result = await firestore.getDoc(doc)
+    const result = await firestore.getDoc<I>(doc as DocumentReference<I>)
     return result
   }
 
