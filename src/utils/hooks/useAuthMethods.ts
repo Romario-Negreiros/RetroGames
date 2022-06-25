@@ -12,7 +12,7 @@ const useAuthMethods = () => {
 
   const sendSignInLinkToEmail = async (email: string, name?: string) => {
     const actionCodeSettings: ActionCodeSettings = {
-      url: `http://localhost:3000/?name=${name}`,
+      url: name ? `http://localhost:3000/?name=${name}` : 'http://localhost:3000',
       handleCodeInApp: true
     }
 
