@@ -3,6 +3,8 @@ import React from 'react'
 import { User as FirebaseUser } from 'firebase/auth'
 
 export interface User extends FirebaseUser {
+  ticTacToe?: Object,
+  spaceShooter?: Object
 }
 
 export interface IAuthContext {
