@@ -1,4 +1,5 @@
 import React from 'react'
+import { useAuth } from '@utils/hooks'
 
 import MenuIcon from '../MenuIcon'
 import Image from 'next/image'
@@ -13,7 +14,7 @@ interface Item {
   disabled?: boolean
 }
 
-const navItems: Item[] = [
+const initialNavItems: Item[] = [
   {
     text: 'Home',
     url: '/'
@@ -35,6 +36,9 @@ const navItems: Item[] = [
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
+  const [navItems, setNavItems] = React.useState(initialNavItems)
+  const { user } = useAuth()
+  const firstUpdate = React.useRef(true)
 
   const handleMobileMenu = () => {
     if (typeof window !== 'undefined' && window.innerWidth <= 600) {
@@ -46,6 +50,23 @@ const Header: React.FC = () => {
     handleMobileMenu()
     if (item.onClick) item.onClick()
   }
+
+  const handleUserAuthStateChange = () => {
+    setNavItems(oldNavItems =>
+      oldNavItems.map(item => (item.disabled !== undefined ? { ...item, disabled: !item.disabled } : { ...item }))
+    )
+  }
+
+  React.useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false
+      if (user) {
+        handleUserAuthStateChange()
+      }
+    } else {
+      handleUserAuthStateChange()
+    }
+  }, [user])
 
   return (
     <header className={styles.container}>
