@@ -102,3 +102,16 @@ form a:hover {
     padding: 2rem 4rem;
   }
 }
+
+::-webkit-scrollbar {
+  width: 1rem;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--quaternary-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: var(--secondary-hover);
+}
