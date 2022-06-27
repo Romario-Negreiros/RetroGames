@@ -51,7 +51,7 @@ const CreateAccount: NextPage = () => {
   if (!isLoaded) {
     return (
       <section className="full_screen_height_wrapper">
-        <Waiting waitingFor="Creating account..." />
+        <Waiting waitingFor="Sending create new account link..." />
       </section>
     )
   } else if (error) {
