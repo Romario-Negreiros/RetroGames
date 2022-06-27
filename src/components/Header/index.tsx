@@ -1,16 +1,18 @@
 import React from 'react'
-import { useAuth } from '@utils/hooks'
+import { useAuth, useAuthMethods, useToast } from '@utils/hooks'
+import { handleError } from '@utils/handlers'
 
 import MenuIcon from '../MenuIcon'
 import Image from 'next/image'
 import Link from 'next/link'
+
+import { User } from '@contexts/authContext'
 
 import styles from '@styles/components/header.module.css'
 
 interface Item {
   text: string
   url?: string
-  onClick?: () => void
   disabled?: boolean
 }
 
@@ -38,6 +40,8 @@ const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
   const [navItems, setNavItems] = React.useState(initialNavItems)
   const { user } = useAuth()
+  const { setToast } = useToast()
+  const { signOut } = useAuthMethods()
   const firstUpdate = React.useRef(true)
 
   const handleMobileMenu = () => {
@@ -46,27 +50,36 @@ const Header: React.FC = () => {
     }
   }
 
-  const handleClickOnNavItem = (item: Item) => {
-    handleMobileMenu()
-    if (item.onClick) item.onClick()
+  const handleLogOff = async () => {
+    try {
+      await signOut()
+    } catch (err) {
+      handleError(err, 'Log user off', undefined, setToast)
+    }
   }
 
-  const handleUserAuthStateChange = () => {
-    setNavItems(oldNavItems =>
-      oldNavItems.map(item => (item.disabled !== undefined ? { ...item, disabled: !item.disabled } : { ...item }))
-    )
+  const handleClickOnNavItem = (item: Item) => {
+    handleMobileMenu()
+    if (item.text === 'Log off') {
+      handleLogOff()
+    }
   }
+
+  const handleUserAuthStateChange = React.useCallback((user: User | null) => {
+    const navItemsCopy: Item[] = JSON.parse(JSON.stringify(navItems))
+    navItemsCopy[2].disabled = Boolean(user)
+    navItemsCopy[3].disabled = !user
+    setNavItems(navItemsCopy)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   React.useEffect(() => {
     if (firstUpdate.current) {
       firstUpdate.current = false
-      if (user) {
-        handleUserAuthStateChange()
-      }
     } else {
-      handleUserAuthStateChange()
+      handleUserAuthStateChange(user)
     }
-  }, [user])
+  }, [user, handleUserAuthStateChange])
 
   return (
     <header className={styles.container}>
@@ -85,7 +98,9 @@ const Header: React.FC = () => {
                       <a>{item.text}</a>
                     </Link>
                   ) : (
-                    item.text
+                    <a>
+                      {item.text}
+                    </a>
                   )}
                 </li>
               )
