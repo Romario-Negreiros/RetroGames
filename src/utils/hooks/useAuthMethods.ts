@@ -56,11 +56,16 @@ const useAuthMethods = () => {
     await auth.updateProfile(currentUser, data)
   }
 
+  const signOut = async () => {
+    await auth.signOut(auth.instance)
+  }
+
   return {
     sendSignInLinkToEmail,
     finishSignInWithEmailLink,
     verifyIfEmailAlreadyExists,
-    updateProfile
+    updateProfile,
+    signOut
   }
 }
 
