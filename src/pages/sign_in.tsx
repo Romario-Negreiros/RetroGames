@@ -7,42 +7,39 @@ import Link from 'next/link'
 import { Error as ErrorComponent, Waiting } from '../components'
 
 import type { NextPage } from 'next'
-import { AuthErrorCodes } from 'firebase/auth'
 
 interface Inputs {
   email: string
-  name: string
 }
 
-const CreateAccount: NextPage = () => {
+const SignIn: NextPage = () => {
   const [error, setError] = React.useState('')
   const [isLoaded, setIsLoaded] = React.useState(true)
   const { setToast } = useToast()
   const { sendSignInLinkToEmail, verifyIfEmailAlreadyExists } = useAuthMethods()
-
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm<Inputs>()
 
-  const onSubmit: SubmitHandler<Inputs> = async ({ email, name }) => {
+  const onSubmit: SubmitHandler<Inputs> = async ({ email }) => {
     try {
       setIsLoaded(false)
-      if (!(await verifyIfEmailAlreadyExists(email))) {
-        await sendSignInLinkToEmail(email, name)
+      if (await verifyIfEmailAlreadyExists(email)) {
+        await sendSignInLinkToEmail(email)
         handleToast(
           ` Please, click on the link sent to your email to complete the 
-          account creation, make sure to check your spam box too!
+        log in, make sure to check your spam box too!
         `,
           setToast,
           10000
         )
         return
       }
-      throw new Error(`(${AuthErrorCodes.EMAIL_EXISTS})`)
+      throw new Error("This account doesn't exist!")
     } catch (err) {
-      handleError(err, 'Creating new account', setError)
+      handleError(err, 'Logging in', setError)
     } finally {
       setIsLoaded(true)
     }
@@ -51,7 +48,7 @@ const CreateAccount: NextPage = () => {
   if (!isLoaded) {
     return (
       <section className="full_screen_height_wrapper">
-        <Waiting waitingFor="Sending create new account link..." />
+        <Waiting waitingFor="Sending log in link..." />
       </section>
     )
   } else if (error) {
@@ -80,34 +77,16 @@ const CreateAccount: NextPage = () => {
             />
             <p>{errors.email?.message}</p>
           </div>
-          <div>
-            <input
-              placeholder="Name"
-              className="input"
-              {...register('name', {
-                required: 'Name is required',
-                minLength: {
-                  value: 4,
-                  message: 'Minimum 4 characters'
-                },
-                maxLength: {
-                  value: 20,
-                  message: 'Maximum of 20 characters'
-                }
-              })}
-            />
-            <p>{errors.name?.message}</p>
-          </div>
         </section>
         <section className="form_inner_content_wrapper">
           <button
             className="button"
             disabled={Boolean(typeof window !== 'undefined' ? window.localStorage.getItem('email') : false)}
           >
-            Submit
+            Log in
           </button>
-          <Link href="/login">
-            <a>Log in instead</a>
+          <Link href="create_account">
+            <a>Create account</a>
           </Link>
         </section>
       </form>
@@ -115,4 +94,4 @@ const CreateAccount: NextPage = () => {
   )
 }
 
-export default CreateAccount
+export default SignIn

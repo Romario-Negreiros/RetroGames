@@ -26,12 +26,12 @@ const initialNavItems: Item[] = [
     url: '/:name'
   },
   {
-    text: 'Log in',
+    text: 'Sign in',
     url: '/login',
     disabled: false
   },
   {
-    text: 'Log off',
+    text: 'Sign out',
     disabled: true
   }
 ]
@@ -50,18 +50,18 @@ const Header: React.FC = () => {
     }
   }
 
-  const handleLogOff = async () => {
+  const handleSignOut = async () => {
     try {
       await signOut()
     } catch (err) {
-      handleError(err, 'Log user off', undefined, setToast)
+      handleError(err, 'Sign user out', undefined, setToast)
     }
   }
 
   const handleClickOnNavItem = (item: Item) => {
     handleMobileMenu()
     if (item.text === 'Log off') {
-      handleLogOff()
+      handleSignOut()
     }
   }
 
