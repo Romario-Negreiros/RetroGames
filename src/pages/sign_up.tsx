@@ -106,7 +106,7 @@ const SignUp: NextPage = () => {
           >
             Submit
           </button>
-          <Link href="/login">
+          <Link href="/sign_in">
             <a>Log in instead</a>
           </Link>
         </section>

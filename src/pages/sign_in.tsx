@@ -85,7 +85,7 @@ const SignIn: NextPage = () => {
           >
             Log in
           </button>
-          <Link href="create_account">
+          <Link href="/sign_up">
             <a>Create account</a>
           </Link>
         </section>
