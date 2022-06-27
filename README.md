@@ -78,6 +78,7 @@ Soon...
 
 - [Logo maker](https://howtostartanllc.com/logo-maker/)
 - [React component renders twice](https://mariosfakiolas.com/blog/my-react-components-render-twice-and-drive-me-crazy/)
+- [Hyphens or underscores in url](https://studiohawk.com.au/blog/dash-or-underscore-in-url-heres-how-its-affecting-your-seo/)
 
 ## Author
 
