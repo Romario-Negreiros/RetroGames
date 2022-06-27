@@ -34,7 +34,9 @@ Soon...
 
 [(Back to top)](#table-of-contents)
 
-Soon...
+- [x] Authentication
+- [ ] Games
+- [ ] Ranks
 
 ## Packages
 
