@@ -1,7 +1,6 @@
 import React from 'react'
 import firebase from '../libs/firebase'
 import { handleError } from '@utils/handlers'
-import { useFirestore } from '@utils/hooks'
 
 import { Layout, Toast } from '../components'
 
@@ -21,28 +20,10 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     message: '',
     timeToCloseInMs: 0
   })
-  const { getDoc } = useFirestore()
 
   React.useEffect(() => {
     const unsubscribe = firebase.auth.instance.onAuthStateChanged(
-      async user => {
-        if (user) {
-          try {
-            if (user.displayName) {
-              const doc = await getDoc<User>(['users'], user.displayName)
-              const userData = doc.data()
-              setUser({ ...user, ...userData })
-              return
-            }
-            throw new Error(
-              `Unable to load your profile, looks like you don't have a name set up,
-               try deleting your account and creating it again!`
-            )
-          } catch (err) {
-            handleError(err, 'Fetch user data when auth state changes', undefined, setToast)
-          }
-          return
-        }
+      user => {
         setUser(user)
       },
       error => {
