@@ -20,7 +20,7 @@ const Home: NextPage = () => {
           const user = await finishSignInWithEmailLink()
           if (name) {
             await updateProfile(user, { displayName: name })
-            await setDoc(['users'], name, { ticTacToe: {}, spaceShooter: {} }) // just set an empty doc at first
+            await setDoc(['users'], name, {})
           }
         } catch (err) {
           handleError(err, 'Complete log in or account creation with email link', undefined, setToast)
