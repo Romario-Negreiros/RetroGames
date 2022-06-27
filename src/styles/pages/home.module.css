@@ -1,0 +1,67 @@
+.container h1 {
+  text-align: left;
+  color: var(--secondary-font);
+  font-size: clamp(1.9rem, 2.5vw, 2.4rem);
+  max-width: 650px;
+}
+
+.container h1 span {
+  display: block;
+  margin-top: 2rem;
+  color: var(--primary-font);
+  text-decoration: underline var(--primary-hover);
+}
+
+.games_list {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 650px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.games_list li {
+  text-align: center;
+  width: 100%;
+  padding: 1rem;
+  border-radius: 3px;
+  background-color: var(--tertiary-bg);
+}
+
+.games_list li h2 {
+  font-size: clamp(1.8rem, 2.5vw, 2.2rem);
+  color: var(--secondary-font);
+}
+
+.game_options {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 3px;
+  background-color: var(--quaternary-bg);
+}
+
+.game_options a {
+  font-size: clamp(1.6rem, 2vw, 1.8rem);
+  color: var(--secondary-font);
+}
+
+.game_options a:hover {
+  color: var(--secondary-hover);
+}
+
+@media screen and (min-width: 500px) {
+  .games_list {
+    justify-content: space-between;
+  }
+
+  .games_list li {
+    width: 48%;
+  }
+}
