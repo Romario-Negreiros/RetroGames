@@ -3,7 +3,9 @@ import firebase from '../libs/firebase'
 import { useToast, useAuthMethods, useFirestore } from '@utils/hooks'
 import { handleError } from '@utils/handlers'
 
-import Link from 'next/link'
+import games from '@static/games.json'
+
+import { GameCard } from '../components'
 
 import styles from '@styles/pages/home.module.css'
 
@@ -41,32 +43,9 @@ const Home: NextPage = () => {
         <span>Just for bragging</span>
       </h1>
       <ul className={styles.games_list}>
-        <li>
-          <h2 className={styles.game}>
-            Tic tac toe
-          </h2>
-          <div className={styles.game_options}>
-            <Link href="/tic-tac-toe/leaderboards">
-              <a>Leaderboards</a>
-            </Link>
-            <Link href="/tic-tac-toe">
-              <a>Play</a>
-            </Link>
-          </div>
-        </li>
-        <li>
-          <h2 className={styles.game}>
-            Space shooter
-          </h2>
-          <div className={styles.game_options}>
-            <Link href="/space-shooter/leaderboards">
-              <a>Leaderboards</a>
-            </Link>
-            <Link href="/space-shooter">
-              <a>Play</a>
-            </Link>
-          </div>
-        </li>
+        {games.map(game => (
+          <GameCard key={game.name} game={game} />
+        ))}
       </ul>
     </section>
   )
