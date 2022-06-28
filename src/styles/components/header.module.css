@@ -2,6 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
   padding: 0 2rem;
   height: 60px;
   background-color: var(--primary-bg);
@@ -15,6 +16,7 @@
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 8; /* smaller than toast and menu icon z-index, which are 9 and 10 respectively */
   padding: 8rem 0 5rem;
   height: 100vh;
   width: 100vw;
