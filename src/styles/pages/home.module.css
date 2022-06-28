@@ -28,6 +28,10 @@
 }
 
 .games_list li {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   text-align: center;
   width: 100%;
   padding: 1rem;
