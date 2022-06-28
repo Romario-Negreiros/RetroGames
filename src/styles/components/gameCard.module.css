@@ -1,3 +1,18 @@
+.game_name {
+  position: relative;
+}
+
+.game_name div {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+}
+
+.game_name div:hover {
+  opacity: 0.5;
+}
+
 .game_options {
   display: flex;
   justify-content: space-between;
