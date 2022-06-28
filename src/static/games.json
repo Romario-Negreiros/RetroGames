@@ -2,13 +2,13 @@
   {
     "name": "Tic Tac Toe",
     "urlName": "tic-tac-toe",
-    "image": "/tic-tac-toe.png",
+    "image": "/mockimage.png",
     "description": "A game in which two players seek in alternate turns to complete a row, a column, or a diagonal with either three O's or three X's drawn in the spaces of a grid of nine squares."
   },
   {
     "name": "Space Shooter",
     "urlName": "space-shooter",
-    "image": "/space-shooter.jpeg",
+    "image": "/mockimage.png",
     "description": "Space Shooter is an arcade game where you control a spaceship in space with a 2D view, your objective is to survive the flyings saucers and asteroids to complete the different levels, you will see that the levels will quickly become more complex."
   }
 ]
