@@ -18,14 +18,26 @@ interface Props {
 }
 
 const GameCard: React.FC<Props> = ({ game: { name, urlName, image, description } }) => {
-  console.log(image, description)
+  const [isShowingGameInfo, setIsShowingGameInfo] = React.useState(false)
 
   return (
     <li>
-      <h2>
-        {name} <br />
-        <FontAwesomeIcon icon={faInfoCircle} color="#4ea9ff" size="1x" /> <br />
+      <h2 className={styles.game_name}>
+        {name}
+        <div onClick={() => setIsShowingGameInfo(!isShowingGameInfo)}>
+          <FontAwesomeIcon
+            icon={isShowingGameInfo ? faTimesCircle : faInfoCircle}
+            color={isShowingGameInfo ? '#ff0000' : '#4ea9ff'}
+            size="1x"
+          />
+        </div>
       </h2>
+      {isShowingGameInfo && (
+        <article className={styles.game_description}>
+          <Image src={image} alt={name} width="100%" height="50px" layout="responsive" objectFit="contain" />
+          <p>{description}</p>
+        </article>
+      )}
       <div className={styles.game_options}>
         <Link href={`/${urlName}/leaderboards`}>
           <a>Leaderboards</a>
@@ -34,10 +46,6 @@ const GameCard: React.FC<Props> = ({ game: { name, urlName, image, description }
           <a>Play</a>
         </Link>
       </div>
-      <article className={styles.game_description}>
-        <Image src={image} alt={name} width="100%" height="40px" layout="responsive" objectFit="contain" />
-        <p>{description}</p>
-      </article>
     </li>
   )
 }
