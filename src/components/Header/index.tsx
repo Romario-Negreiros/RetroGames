@@ -17,6 +17,7 @@ const Header: React.FC = () => {
   const handleMobileMenu = () => {
     if (typeof window !== 'undefined' && window.innerWidth <= 600) {
       setIsMenuOpen(!isMenuOpen)
+      document.querySelector('body')?.classList.toggle('body_with_menu_open')
     }
   }
 
@@ -27,6 +28,17 @@ const Header: React.FC = () => {
       handleError(err, 'Sign user out', undefined, setToast)
     }
   }
+
+  const handleWindowResize = React.useCallback(() => {
+    if (typeof window !== 'undefined' && window.innerWidth >= 600 && isMenuOpen) {
+      setIsMenuOpen(false)
+      document.querySelector('body')?.classList.remove('body_with_menu_open')
+    }
+  }, [isMenuOpen])
+
+  React.useEffect(() => {
+    window.addEventListener('resize', handleWindowResize)
+  }, [handleWindowResize])
 
   return (
     <header className={styles.container}>
