@@ -2,7 +2,6 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
-  margin-top: 1rem;
   padding: 0.5rem 1rem;
   border-radius: 3px;
   background-color: var(--quaternary-bg);
@@ -15,4 +14,15 @@
 
 .game_options a:hover {
   color: var(--secondary-hover);
+}
+
+.game_description {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.game_description p {
+  font-size: clamp(1.4rem, 2vw, 1.6rem);
+  color: var(--secondary-font);
 }
