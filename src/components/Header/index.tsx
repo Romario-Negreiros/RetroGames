@@ -62,7 +62,7 @@ const Header: React.FC = () => {
           )}
           {!user && (
             <li onClick={handleMobileMenu}>
-              <Link href="/sign_in">
+              <Link href="/sign-in">
                 <a>Sign In</a>
               </Link>
             </li>
