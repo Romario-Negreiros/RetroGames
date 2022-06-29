@@ -39,8 +39,8 @@ const GameCard: React.FC<Props> = ({ game: { name, urlName, image, description }
         </article>
       )}
       <div className={styles.game_options}>
-        <Link href={`/${urlName}/leaderboards`}>
-          <a>Leaderboards</a>
+        <Link href={`/${urlName}/leaderboard`}>
+          <a>Leaderboard</a>
         </Link>
         <Link href={`/${urlName}`}>
           <a>Play</a>
