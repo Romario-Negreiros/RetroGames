@@ -12,7 +12,7 @@ const users = [
     maxWinStreak: 74
   },
   {
-    position: 1,
+    position: 2,
     name: 'Romario',
     score: 2323565,
     wins: 123,
@@ -20,7 +20,7 @@ const users = [
     maxWinStreak: 74
   },
   {
-    position: 1,
+    position: 3,
     name: 'Romario',
     score: 2323565,
     wins: 123,
@@ -28,7 +28,7 @@ const users = [
     maxWinStreak: 74
   },
   {
-    position: 1,
+    position: 4,
     name: 'Romario',
     score: 2323565,
     wins: 123,
@@ -36,7 +36,7 @@ const users = [
     maxWinStreak: 74
   },
   {
-    position: 1,
+    position: 5,
     name: 'Romario',
     score: 2323565,
     wins: 123,
@@ -44,7 +44,7 @@ const users = [
     maxWinStreak: 74
   },
   {
-    position: 1,
+    position: 6,
     name: 'Romario',
     score: 2323565,
     wins: 123,
@@ -52,7 +52,7 @@ const users = [
     maxWinStreak: 74
   },
   {
-    position: 1,
+    position: 7,
     name: 'Romario',
     score: 2323565,
     wins: 123,
@@ -60,7 +60,7 @@ const users = [
     maxWinStreak: 74
   },
   {
-    position: 1,
+    position: 8,
     name: 'Romario',
     score: 2323565,
     wins: 123,
@@ -68,7 +68,7 @@ const users = [
     maxWinStreak: 74
   },
   {
-    position: 1,
+    position: 9,
     name: 'Romario',
     score: 2323565,
     wins: 123,
@@ -76,7 +76,7 @@ const users = [
     maxWinStreak: 74
   },
   {
-    position: 1,
+    position: 10,
     name: 'Romario',
     score: 2323565,
     wins: 123,
@@ -88,8 +88,16 @@ const users = [
 const Leaderboard: NextPage = () => {
   return (
     <section className={`full_screen_height_wrapper ${styles.container}`}>
-      <h1>Leaderboard / GameName</h1>
-      <section className={styles.tableContainer}>
+      <section className={styles.top_container}>
+        <div className={styles.title_legend_container}>
+          <h1>Leaderboard <br /> GameName</h1>
+          <p>MWS = Max Win Streak</p>
+        </div>
+        <div className={styles.input_container}>
+          <input type="search" placeholder="Search player..." className="input" />
+        </div>
+      </section>
+      <section className={styles.table_container}>
         <table className={styles.table}>
           <thead>
             <tr>
@@ -98,10 +106,28 @@ const Leaderboard: NextPage = () => {
               <th>Score</th>
               <th>Wins</th>
               <th>Losses</th>
-              <th>Max Win Streak</th>
+              <th>MWS</th>
             </tr>
           </thead>
           <tbody>
+            <tr className={styles.current_user_position}>
+              <td>#1546</td>
+              <td>oasdfghj cnvmsfedopl</td>
+              <td>2456</td>
+              <td>14</td>
+              <td>5</td>
+              <td>2</td>
+            </tr>
+            {users.map(data => (
+              <tr key={data.position}>
+                <td>#{data.position}</td>
+                <td>{data.name}</td>
+                <td>{data.score}</td>
+                <td>{data.wins}</td>
+                <td>{data.losses}</td>
+                <td>{data.maxWinStreak}</td>
+              </tr>
+            ))}
             {users.map(data => (
               <tr key={data.position}>
                 <td>#{data.position}</td>
