@@ -30,7 +30,18 @@
 }
 
 .input_container input {
+  background-color: var(--tertiary-bg);
   max-width: 400px;
+}
+
+.input_container input:hover {
+  background-color: var(--quaternary-bg);
+  border-color: transparent;
+}
+
+.input_container input:focus {
+  background-color: var(--tertiary-bg);
+  border-color: #fff;
 }
 
 .table_container {
