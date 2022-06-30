@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 import styles from '@styles/pages/leaderboard.module.css'
 
 import type { NextPage } from 'next'
@@ -90,7 +92,9 @@ const Leaderboard: NextPage = () => {
     <section className={`full_screen_height_wrapper ${styles.container}`}>
       <section className={styles.top_container}>
         <div className={styles.title_legend_container}>
-          <h1>Leaderboard <br /> GameName</h1>
+          <h1>
+            Leaderboard <br /> GameName
+          </h1>
           <p>MWS = Max Win Streak</p>
         </div>
         <div className={styles.input_container}>
@@ -112,7 +116,11 @@ const Leaderboard: NextPage = () => {
           <tbody>
             <tr className={styles.current_user_position}>
               <td>#1546</td>
-              <td>oasdfghj cnvmsfedopl</td>
+              <td>
+                <Link href={`/players/${'oasdfghj cnvmsfedopl'}`}>
+                  <a>{'oasdfghj cnvmsfedopl'}</a>
+                </Link>
+              </td>
               <td>2456</td>
               <td>14</td>
               <td>5</td>
@@ -121,7 +129,11 @@ const Leaderboard: NextPage = () => {
             {users.map(data => (
               <tr key={data.position}>
                 <td>#{data.position}</td>
-                <td>{data.name}</td>
+                <td>
+                  <Link href={`/players/${data.name}`}>
+                    <a>{data.name}</a>
+                  </Link>
+                </td>{' '}
                 <td>{data.score}</td>
                 <td>{data.wins}</td>
                 <td>{data.losses}</td>
@@ -131,7 +143,11 @@ const Leaderboard: NextPage = () => {
             {users.map(data => (
               <tr key={data.position}>
                 <td>#{data.position}</td>
-                <td>{data.name}</td>
+                <td>
+                  <Link href={`/players/${data.name}`}>
+                    <a>{data.name}</a>
+                  </Link>
+                </td>
                 <td>{data.score}</td>
                 <td>{data.wins}</td>
                 <td>{data.losses}</td>
