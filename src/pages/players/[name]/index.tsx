@@ -24,6 +24,11 @@ type Games = 'ticTacToe' | 'spaceShooter'
 
 const games: Games[] = ['ticTacToe', 'spaceShooter']
 
+const gamesNamesForTitle = {
+  ticTacToe: 'Tic Tac Toe',
+  spaceShooter: 'Space Shooter'
+}
+
 const PlayerProfile: NextPage = () => {
   return (
     <section className={styles.container}>
@@ -31,7 +36,7 @@ const PlayerProfile: NextPage = () => {
       {games.map(game => (
         <ul key={game} className={styles.game_info}>
           <li className={styles.game_title}>
-            <h2>{game.match(/^([a-z]*){1}([A-Z]{1}[a-z]*)*$/)}</h2>
+            <h2>{gamesNamesForTitle[game]}</h2>
           </li>
           <li><span>Leaderboard position: </span>{user[game].position}</li>
           <li><span>Score: </span>{user[game].score}</li>
