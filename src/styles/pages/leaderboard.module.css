@@ -74,6 +74,11 @@
   padding: 1rem 0.5rem;
 }
 
+.table td a:hover {
+  color: var(--secondary-font);
+  text-decoration: underline var(--secondary-hover);
+}
+
 .table tr:not(.current_user_position):hover td {
   background-color: var(--quaternary-bg);
 }
