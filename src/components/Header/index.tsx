@@ -55,7 +55,7 @@ const Header: React.FC = () => {
           </li>
           {user && (
             <li onClick={handleMobileMenu}>
-              <Link href={`/${user.displayName}`}>
+              <Link href={`/players/${user.displayName}`}>
                 <a>{user.displayName}</a>
               </Link>
             </li>
