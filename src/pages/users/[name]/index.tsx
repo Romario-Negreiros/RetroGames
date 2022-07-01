@@ -1,4 +1,4 @@
-import styles from '@styles/pages/playerProfile.module.css'
+import styles from '@styles/pages/userProfile.module.css'
 
 import type { NextPage } from 'next'
 
