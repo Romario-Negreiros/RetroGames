@@ -117,7 +117,7 @@ const Leaderboard: NextPage = () => {
             <tr className={styles.current_user_position}>
               <td>#1546</td>
               <td>
-                <Link href={`/players/${'oasdfghj cnvmsfedopl'}`}>
+                <Link href={`/users/${'oasdfghj cnvmsfedopl'}`}>
                   <a>{'oasdfghj cnvmsfedopl'}</a>
                 </Link>
               </td>
@@ -130,24 +130,10 @@ const Leaderboard: NextPage = () => {
               <tr key={data.position}>
                 <td>#{data.position}</td>
                 <td>
-                  <Link href={`/players/${data.name}`}>
+                  <Link href={`/users/${data.name}`}>
                     <a>{data.name}</a>
                   </Link>
                 </td>{' '}
-                <td>{data.score}</td>
-                <td>{data.wins}</td>
-                <td>{data.losses}</td>
-                <td>{data.maxWinStreak}</td>
-              </tr>
-            ))}
-            {users.map(data => (
-              <tr key={data.position}>
-                <td>#{data.position}</td>
-                <td>
-                  <Link href={`/players/${data.name}`}>
-                    <a>{data.name}</a>
-                  </Link>
-                </td>
                 <td>{data.score}</td>
                 <td>{data.wins}</td>
                 <td>{data.losses}</td>

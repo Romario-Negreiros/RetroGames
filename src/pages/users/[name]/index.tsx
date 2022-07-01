@@ -29,7 +29,7 @@ const gamesNamesForTitle = {
   spaceShooter: 'Space Shooter'
 }
 
-const PlayerProfile: NextPage = () => {
+const UserProfile: NextPage = () => {
   return (
     <section className={styles.container}>
       <h1>Nome do otário</h1>
@@ -64,4 +64,4 @@ const PlayerProfile: NextPage = () => {
   )
 }
 
-export default PlayerProfile
+export default UserProfile
