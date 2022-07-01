@@ -4,15 +4,15 @@ import styles from '@styles/components/menuIcon.module.css'
 
 interface Props {
   isMenuOpen: boolean
-  handleMobileMenu: () => void
+  handleOpenOrCloseMobileMenu: () => void
 }
 
-const MenuIcon: React.FC<Props> = ({ handleMobileMenu, isMenuOpen }) => {
+const MenuIcon: React.FC<Props> = ({ handleOpenOrCloseMobileMenu, isMenuOpen }) => {
   return (
     <button
       className={styles.container}
       aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-      onClick={() => handleMobileMenu()}
+      onClick={() => handleOpenOrCloseMobileMenu()}
     >
       <span className={`${isMenuOpen && styles.close_left}`}></span>
       <span className={`${isMenuOpen && styles.close_right}`}></span>

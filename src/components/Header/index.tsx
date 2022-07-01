@@ -14,7 +14,7 @@ const Header: React.FC = () => {
   const { setToast } = useToast()
   const { signOut } = useAuthMethods()
 
-  const handleMobileMenu = () => {
+  const handleOpenOrCloseMobileMenu = () => {
     if (typeof window !== 'undefined' && window.innerWidth <= 600) {
       setIsMenuOpen(!isMenuOpen)
       document.querySelector('body')?.classList.toggle('body_with_menu_open')
@@ -29,7 +29,7 @@ const Header: React.FC = () => {
     }
   }
 
-  const handleWindowResize = React.useCallback(() => {
+  const handleCloseMobileMenuOnWindowResize = React.useCallback(() => {
     if (typeof window !== 'undefined' && window.innerWidth >= 600 && isMenuOpen) {
       setIsMenuOpen(false)
       document.querySelector('body')?.classList.remove('body_with_menu_open')
@@ -37,8 +37,8 @@ const Header: React.FC = () => {
   }, [isMenuOpen])
 
   React.useEffect(() => {
-    window.addEventListener('resize', handleWindowResize)
-  }, [handleWindowResize])
+    window.addEventListener('resize', handleCloseMobileMenuOnWindowResize)
+  }, [handleCloseMobileMenuOnWindowResize])
 
   return (
     <header className={styles.container}>
@@ -46,22 +46,22 @@ const Header: React.FC = () => {
         <Image src="/logo.svg" width={40} height={40} alt="RetroGames" />
       </section>
       <nav>
-        <MenuIcon handleMobileMenu={handleMobileMenu} isMenuOpen={isMenuOpen} />
+        <MenuIcon handleOpenOrCloseMobileMenu={handleOpenOrCloseMobileMenu} isMenuOpen={isMenuOpen} />
         <ul className={`${styles.nav_list_container} ${isMenuOpen && styles.nav_list_container_active}`}>
-          <li onClick={handleMobileMenu}>
+          <li onClick={handleOpenOrCloseMobileMenu}>
             <Link href="/">
               <a>Home</a>
             </Link>
           </li>
           {user && (
-            <li onClick={handleMobileMenu}>
+            <li onClick={handleOpenOrCloseMobileMenu}>
               <Link href={`/players/${user.displayName}`}>
                 <a>{user.displayName}</a>
               </Link>
             </li>
           )}
           {!user && (
-            <li onClick={handleMobileMenu}>
+            <li onClick={handleOpenOrCloseMobileMenu}>
               <Link href="/sign-in">
                 <a>Sign In</a>
               </Link>
@@ -70,7 +70,7 @@ const Header: React.FC = () => {
           {user && (
             <li
               onClick={() => {
-                handleMobileMenu()
+                handleOpenOrCloseMobileMenu()
                 handleSignOut()
               }}
             >
