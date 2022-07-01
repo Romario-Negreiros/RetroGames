@@ -38,11 +38,26 @@ const PlayerProfile: NextPage = () => {
           <li className={styles.game_title}>
             <h2>{gamesNamesForTitle[game]}</h2>
           </li>
-          <li><span>Leaderboard position: </span>{user[game].position}</li>
-          <li><span>Score: </span>{user[game].score}</li>
-          <li><span>Wins: </span>{user[game].wins}</li>
-          <li><span>Losses: </span>{user[game].losses}</li>
-          <li><span>Max Win Streak: </span>{user[game].maxWinStreak}</li>
+          <li>
+            <span>Leaderboard position: </span>
+            {user[game].position}
+          </li>
+          <li>
+            <span>Score: </span>
+            {user[game].score}
+          </li>
+          <li>
+            <span>Wins: </span>
+            {user[game].wins}
+          </li>
+          <li>
+            <span>Losses: </span>
+            {user[game].losses}
+          </li>
+          <li>
+            <span>Max Win Streak: </span>
+            {user[game].maxWinStreak}
+          </li>
         </ul>
       ))}
     </section>
