@@ -34,9 +34,14 @@ Soon...
 
 [(Back to top)](#table-of-contents)
 
-- [x] Authentication
+- [x] Auth
+ - [x] Sign In
+ - [x] Sign Up
 - [ ] Games
-- [ ] Ranks
+ - [ ] Tic Tac Toe
+ - [ ] Space Shooter
+- [ ] Leaderboards
+- [ ] Players profiles
 
 ## Packages
 
