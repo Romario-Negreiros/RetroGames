@@ -1,0 +1,18 @@
+.container {
+  place-items: unset;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.container h1 {
+  font-size: clamp(2rem, 2.5vw, 3rem);
+  color: var(--secondary-font);
+}
+
+.game_container {
+  background: red;
+  width: 100%;
+  flex-grow: 1;
+}
