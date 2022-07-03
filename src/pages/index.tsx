@@ -37,7 +37,7 @@ const Home: NextPage = () => {
   }, [])
 
   return (
-    <section className={`full_screen_height_wrapper ${styles.container}`}>
+    <main className={`main_container full_screen_height_wrapper ${styles.container}`}>
       <h1>
         Choose a game, play against other people, have fun and, maybe, get a good placement on the leaderboards...
         <span>Just for bragging</span>
@@ -47,7 +47,7 @@ const Home: NextPage = () => {
           <GameCard key={game.name} game={game} />
         ))}
       </ul>
-    </section>
+    </main>
   )
 }
 

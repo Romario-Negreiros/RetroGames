@@ -50,19 +50,19 @@ const SignUp: NextPage = () => {
 
   if (!isLoaded) {
     return (
-      <section className="full_screen_height_wrapper">
+      <main className="main_container full_screen_height_wrapper">
         <Waiting waitingFor="Sending create new account link..." />
-      </section>
+      </main>
     )
   } else if (error) {
     return (
-      <section className="full_screen_height_wrapper">
+      <main className="main_container full_screen_height_wrapper">
         <ErrorComponent error={error} setError={setError} />
-      </section>
+      </main>
     )
   }
   return (
-    <section className="full_screen_height_wrapper">
+    <main className="main_container full_screen_height_wrapper">
       <form onSubmit={handleSubmit(onSubmit)}>
         <section className="form_inner_content_wrapper">
           <div>
@@ -111,7 +111,7 @@ const SignUp: NextPage = () => {
           </Link>
         </section>
       </form>
-    </section>
+    </main>
   )
 }
 

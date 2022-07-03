@@ -31,7 +31,7 @@ const gamesNamesForTitle = {
 
 const UserProfile: NextPage = () => {
   return (
-    <section className={styles.container}>
+    <main className={`main_container ${styles.container}`}>
       <h1>Nome do otário</h1>
       {games.map(game => (
         <ul key={game} className={styles.game_info}>
@@ -60,7 +60,7 @@ const UserProfile: NextPage = () => {
           </li>
         </ul>
       ))}
-    </section>
+    </main>
   )
 }
 

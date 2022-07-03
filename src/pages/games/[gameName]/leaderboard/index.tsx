@@ -89,7 +89,7 @@ const users = [
 
 const Leaderboard: NextPage = () => {
   return (
-    <section className={`full_screen_height_wrapper ${styles.container}`}>
+    <main className={`main_container full_screen_height_wrapper ${styles.container}`}>
       <section className={styles.top_container}>
         <div className={styles.title_legend_container}>
           <h1>
@@ -143,7 +143,7 @@ const Leaderboard: NextPage = () => {
           </tbody>
         </table>
       </section>
-    </section>
+    </main>
   )
 }
 

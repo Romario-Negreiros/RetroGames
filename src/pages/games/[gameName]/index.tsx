@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { TicTacToe, SpaceShooter } from '../../../components'
+
 import styles from '@styles/pages/game.module.css'
 
 import type { NextPage, GetStaticPaths, GetStaticProps } from 'next'
@@ -25,7 +27,7 @@ export const getStaticProps: GetStaticProps = async context => {
     props: {
       game: {
         nameForTitle,
-        urlName: gameName
+        nameForUrl: gameName
       }
     }
   }
@@ -34,16 +36,23 @@ export const getStaticProps: GetStaticProps = async context => {
 interface Props {
   game: {
     nameForTitle: string
-    nameForUrl: string
+    nameForUrl: 'tic-tac-toe' | 'space-shooter'
   }
 }
 
-const Game: NextPage<Props> = ({ game: { nameForTitle } }) => {
+const games = {
+  'tic-tac-toe': <TicTacToe />,
+  'space-shooter': <SpaceShooter />
+}
+
+const Game: NextPage<Props> = ({ game: { nameForTitle, nameForUrl } }) => {
   return (
-    <section className={`full_screen_height_wrapper ${styles.container}`}>
+    <main className={`main_container full_screen_height_wrapper ${styles.container}`}>
       <h1>{nameForTitle}</h1>
-      <div className={styles.game_container}>b</div>
-    </section>
+      <section className={styles.game_container}>
+        {games[nameForUrl]}
+      </section>
+    </main>
   )
 }
 
