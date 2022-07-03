@@ -7,7 +7,7 @@
 
 .container h1 {
   font-size: clamp(2rem, 2.5vw, 3rem);
-  color: var(--secondary-font);
+  color: var(--primary-font);
   margin-bottom: 3rem;
 }
 
@@ -26,14 +26,14 @@
   width: 100%;
   word-break: break-all;
   font-size: clamp(1.4rem, 2.5vw, 1.8rem);
-  color: var(--primary-font);
+  color: var(--secondary-font);
 }
 
 .game_info li span {
-  color: var(--secondary-font);
+  color: var(--primary-font);
 }
 
 .game_info .game_title h2 {
   font-size: clamp(1.8rem, 2.5vw, 2.2rem);
-  color: var(--secondary-font);
+  color: var(--primary-font);
 }

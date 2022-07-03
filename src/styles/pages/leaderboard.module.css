@@ -13,12 +13,12 @@
 
 .title_legend_container h1 {
   font-size: clamp(2rem, 2.5vw, 3rem);
-  color: var(--secondary-font);
+  color: var(--primary-font);
   margin-bottom: 2rem;
 }
 
 .title_legend_container p {
-  color: var(--secondary-font);
+  color: var(--primary-font);
   font-size: clamp(1.4rem, 2.5vw, 1.8rem);
 }
 
@@ -59,12 +59,12 @@
 
 .table th {
   background-color: var(--quaternary-bg);
-  color: var(--secondary-font);
+  color: var(--primary-font);
   font-size: clamp(1.6rem, 2.5vw, 2rem);
 }
 
 .table td {
-  color: var(--primary-font);
+  color: var(--secondary-font);
   font-size: clamp(1.4rem, 2.5vw, 1.8rem);
 }
 
@@ -75,7 +75,7 @@
 }
 
 .table td a:hover {
-  color: var(--secondary-font);
+  color: var(--primary-font);
   text-decoration: underline var(--secondary-hover);
 }
 

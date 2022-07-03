@@ -6,7 +6,7 @@
 
 .container h1 {
   text-align: left;
-  color: var(--secondary-font);
+  color: var(--primary-font);
   font-size: clamp(1.9rem, 2.5vw, 2.4rem);
   max-width: 650px;
 }
@@ -14,7 +14,7 @@
 .container h1 span {
   display: block;
   margin-top: 2rem;
-  color: var(--primary-font);
+  color: var(--secondary-font);
   text-decoration: underline var(--primary-hover);
 }
 
@@ -41,7 +41,7 @@
 
 .games_list li h2 {
   font-size: clamp(1.8rem, 2.5vw, 2.2rem);
-  color: var(--secondary-font);
+  color: var(--primary-font);
 }
 
 @media screen and (min-width: 400px) {

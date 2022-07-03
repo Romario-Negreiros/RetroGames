@@ -11,11 +11,11 @@
 
 .container h1 {
   font-size: 3rem;
-  color: var(--primary-font);
+  color: var(--secondary-font);
   text-decoration: underline var(--primary-hover);
 }
 
 .container p {
   font-size: 2rem;
-  color: var(--secondary-font);
+  color: var(--primary-font);
 }

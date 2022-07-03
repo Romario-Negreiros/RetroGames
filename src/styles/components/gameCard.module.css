@@ -24,7 +24,7 @@
 
 .game_options a {
   font-size: clamp(1.6rem, 2vw, 1.8rem);
-  color: var(--secondary-font);
+  color: var(--primary-font);
 }
 
 .game_options a:hover {
@@ -39,5 +39,5 @@
 
 .game_description p {
   font-size: clamp(1.4rem, 2vw, 1.6rem);
-  color: var(--secondary-font);
+  color: var(--primary-font);
 }

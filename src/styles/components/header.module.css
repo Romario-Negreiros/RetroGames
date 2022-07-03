@@ -30,7 +30,7 @@
   width: 100%;
   text-align: center;
   font-size: 2rem;
-  color: var(--secondary-font);
+  color: var(--primary-font);
 }
 
 .nav_list_container li a {
