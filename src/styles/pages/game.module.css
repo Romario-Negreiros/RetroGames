@@ -12,7 +12,18 @@
 }
 
 .game_container {
-  background: red;
+  height: calc(100vh - 120px);
   width: 100%;
-  flex-grow: 1;
+}
+
+@media screen and (min-width: 600px) {
+  .game_container {
+    height: calc(100vh - 135px);
+  }
+}
+
+@media screen and (min-width: 1000px) {
+  .game_container {
+    height: calc(100vh - 140px);
+  }
 }
