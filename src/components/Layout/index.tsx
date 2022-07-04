@@ -22,7 +22,7 @@ const Layout: React.FC<Props> = ({ children }) => {
       </Head>
 
       <Header />
-      <main className="main_container">{children}</main>
+      {children}
     </>
   )
 }
