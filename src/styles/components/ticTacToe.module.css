@@ -1,0 +1,22 @@
+.container {
+  width: 100%;
+  height: fit-content;
+  max-width: 420px;
+}
+
+.container canvas {
+  background-color: #fff;
+  width: 100%;
+  height: auto;
+}
+
+.container p {
+  color: var(--primary-font);
+  font-size: 2rem;
+}
+
+@media screen and (min-width: 440px) {
+  .container canvas {
+    height: 420px;
+  }
+}
