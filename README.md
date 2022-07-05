@@ -86,6 +86,7 @@ Soon...
 - [Hyphens or underscores in url](https://studiohawk.com.au/blog/dash-or-underscore-in-url-heres-how-its-affecting-your-seo/)
 - [Regex cheat sheet](https://cheatography.com/davechild/cheat-sheets/regular-expressions/)
 - [Regex tester](https://regex101.com)
+- [Canvas with react](https://medium.com/@pdx.lucasm/canvas-with-react-js-32e133c05258)
 
 ## Author
 
