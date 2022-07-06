@@ -1,11 +1,11 @@
 .container {
   width: 100%;
+  background-color: #fff;
   height: fit-content;
   max-width: 420px;
 }
 
 .container canvas {
-  background-color: #fff;
   width: 100%;
   height: auto;
 }
