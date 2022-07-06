@@ -2,6 +2,19 @@
   padding: 1rem 0.6rem;
 }
 
+.modal_container {
+  display: grid;
+  place-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem;
+  z-index: 40;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
 body {
   overflow-x: hidden;
 }
