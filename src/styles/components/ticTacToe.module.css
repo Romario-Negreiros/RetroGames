@@ -15,6 +15,25 @@
   font-size: 2rem;
 }
 
+
+.game_modal_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem;
+  width: 100%;
+  max-width: 500px;
+  background-color: var(--quaternary-bg);
+}
+
+.game_modal_container h2 {
+  font-size: clamp(2rem, 2.5vw, 3rem);
+  color: var(--primary-font);
+}
+
+
 @media screen and (min-width: 440px) {
   .container canvas {
     height: 420px;
