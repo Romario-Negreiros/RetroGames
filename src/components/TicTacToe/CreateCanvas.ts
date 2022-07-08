@@ -1,15 +1,7 @@
-interface CellCenterCoordinate {
-  x: number
-  y: number
-}
+import type { CanvasDimensions, CellCenterCoordinates } from './types'
 
-interface CanvasDimensions {
-  width: number
-  height: number
-}
-
-const canvasMethods = () => {
-  const resizeCanvas = (canvas: HTMLCanvasElement) => {
+const CreateCanvas = () => {
+  const resize = (canvas: HTMLCanvasElement) => {
     const { width, height } = canvas.getBoundingClientRect()
     if (canvas.width !== width || canvas.height !== height) {
       const { devicePixelRatio: ratio = 1 } = window
@@ -70,7 +62,7 @@ const canvasMethods = () => {
     width: number,
     height: number
   ) => {
-    const cellsCenterCoordinates: CellCenterCoordinate[][] = [[], [], []]
+    const cellsCenterCoordinates: CellCenterCoordinates[][] = [[], [], []]
     cellsCenterCoordinates[0][0] = { x: width / 3 / 2, y: height / 3 / 2 }
     cellsCenterCoordinates[0][1] = { x: width / 2, y: height / 3 / 2 }
     cellsCenterCoordinates[0][2] = { x: width - width / 3 / 2, y: height / 3 / 2 }
@@ -85,7 +77,7 @@ const canvasMethods = () => {
   }
 
   const findClosestTableCellToTheMouseClickCoordinates = (
-    cellsCenterCoordinates: CellCenterCoordinate[][],
+    cellsCenterCoordinates: CellCenterCoordinates[][],
     mouseCoordinatesRelativeToCanvas: { x: number; y: number }
   ) => {
     const { x, y } = mouseCoordinatesRelativeToCanvas
@@ -120,7 +112,7 @@ const canvasMethods = () => {
   }
 
   return {
-    resizeCanvas,
+    resize,
     drawTable,
     drawO,
     drawX,
@@ -129,4 +121,4 @@ const canvasMethods = () => {
   }
 }
 
-export default canvasMethods
+export default CreateCanvas
