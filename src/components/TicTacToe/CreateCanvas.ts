@@ -38,6 +38,15 @@ const CreateCanvas = () => {
     ctx.stroke()
   }
 
+  const reset = (canvas: HTMLCanvasElement) => {
+    const { width, height } = canvas.getBoundingClientRect()
+    const ctx = canvas.getContext('2d')
+    if (ctx) {
+      ctx.clearRect(0, 0, width, height)
+      drawTable({ width, height }, ctx)
+    }
+  }
+
   const drawO = (ctx: CanvasRenderingContext2D, cellCenterCoordinates: { x: number; y: number }, cellWidth: number) => {
     const _0degInRad = Math.PI / 180
     const _360degInRad = Math.PI * 2
@@ -48,7 +57,7 @@ const CreateCanvas = () => {
   }
 
   const drawX = (ctx: CanvasRenderingContext2D, cellCenterCoordinates: { x: number; y: number }, cellWidth: number) => {
-    const _30PercentOffCelWidth = cellWidth / 100 * 30
+    const _30PercentOffCelWidth = (cellWidth / 100) * 30
     const { x, y } = cellCenterCoordinates
     ctx.beginPath()
     ctx.moveTo(x + _30PercentOffCelWidth, y - _30PercentOffCelWidth)
@@ -58,10 +67,7 @@ const CreateCanvas = () => {
     ctx.stroke()
   }
 
-  const getCellsCenterCoordinates = (
-    width: number,
-    height: number
-  ) => {
+  const getCellsCenterCoordinates = (width: number, height: number) => {
     const cellsCenterCoordinates: CellCenterCoordinates[][] = [[], [], []]
     cellsCenterCoordinates[0][0] = { x: width / 3 / 2, y: height / 3 / 2 }
     cellsCenterCoordinates[0][1] = { x: width / 2, y: height / 3 / 2 }
@@ -81,8 +87,8 @@ const CreateCanvas = () => {
     mouseCoordinatesRelativeToCanvas: { x: number; y: number }
   ) => {
     const { x, y } = mouseCoordinatesRelativeToCanvas
-    let row
-    let col
+    let row = 0
+    let col = 0
     let trackDistanceX = 0
     let trackDistanceY = 0
     for (let i = 0; i <= 2; i++) {
@@ -107,12 +113,17 @@ const CreateCanvas = () => {
       }
     }
 
-    const cellCenterCoordinates = cellsCenterCoordinates[row as number][col as number]
-    return cellCenterCoordinates
+    const coordinates = cellsCenterCoordinates[row][col]
+    return {
+      coordinates,
+      row,
+      col
+    }
   }
 
   return {
     resize,
+    reset,
     drawTable,
     drawO,
     drawX,
