@@ -9,33 +9,47 @@ import { ClientOnlyPortal, Waiting } from '../'
 
 import styles from '@styles/components/ticTacToe.module.css'
 
-import type { GameStates, CanvasDimensions } from './types'
+import type { GameStates, CanvasDimensions, Player } from './types'
 
 const canvas = CreateCanvas()
 
-const handleClickOnCanvas = (event: React.MouseEvent<HTMLCanvasElement>, canvasDimensions: CanvasDimensions) => {
-  const { x, y } = event.currentTarget.getBoundingClientRect()
-  const { clientX, clientY } = event
-  const mouseXPositionRelativeToCanvas = clientX - x
-  const mouseYPositionRelativeToCanvas = clientY - y
-  if (mouseXPositionRelativeToCanvas >= 0 && mouseYPositionRelativeToCanvas >= 0) {
-    const canvasElement = event.currentTarget
-    const ctx = canvasElement.getContext('2d')
-    if (ctx) {
-      const table = canvas.getCellsCenterCoordinates(canvasDimensions.width, canvasDimensions.height)
-      const coordinates = canvas.findClosestTableCellToTheMouseClickCoordinates(table, {
-        x: mouseXPositionRelativeToCanvas,
-        y: mouseYPositionRelativeToCanvas
-      })
-      canvas.drawX(ctx, coordinates, canvasDimensions.width / 3)
-    }
-  }
-}
-
 const TicTacToe: React.FC = () => {
   const [gameState, setGameState] = React.useState<GameStates>('pre game')
+  const [turn, setTurn] = React.useState<Player | null>(null)
   const [canvasDimensions, setCanvasDimensions] = React.useState<CanvasDimensions>({ width: 0, height: 0 })
   const { setToast } = useToast()
+  const game = React.useMemo(() => CreateGame(setGameState, setTurn, canvas.reset), [])
+
+  const handleClickOnCanvas = (event: React.MouseEvent<HTMLCanvasElement>, canvasDimensions: CanvasDimensions) => {
+    const { x, y } = event.currentTarget.getBoundingClientRect()
+    const { clientX, clientY } = event
+    const mouseXPositionRelativeToCanvas = clientX - x
+    const mouseYPositionRelativeToCanvas = clientY - y
+    if (mouseXPositionRelativeToCanvas >= 0 && mouseYPositionRelativeToCanvas >= 0) {
+      const canvasElement = event.currentTarget
+      const ctx = canvasElement.getContext('2d')
+      if (ctx) {
+        const table = canvas.getCellsCenterCoordinates(canvasDimensions.width, canvasDimensions.height)
+        const { coordinates, row, col } = canvas.findClosestTableCellToTheMouseClickCoordinates(table, {
+          x: mouseXPositionRelativeToCanvas,
+          y: mouseYPositionRelativeToCanvas
+        })
+        if (turn?.shape === 'x') {
+          canvas.drawX(ctx, coordinates, canvasDimensions.width / 3)
+        } else {
+          canvas.drawO(ctx, coordinates, canvasDimensions.width / 3)
+        }
+
+        if (turn?.id === 1) {
+          game.setMovement(row, col, 'p1')
+          setTurn(game.getP2())
+        } else {
+          game.setMovement(row, col, 'p2')
+          setTurn(game.getP1())
+        }
+      }
+    }
+  }
 
   const handleWindowResize = throttle(() => {
     if (window.innerWidth < 440) {
@@ -52,16 +66,11 @@ const TicTacToe: React.FC = () => {
 
   const handleClickOnButton = () => {
     try {
-      const game = CreateGame(setGameState)
       game.findAMatch()
       setTimeout(() => {
-        game.start()
-        console.log(game.getP1(), game.getP2())
+        const turn = game.start()
+        setTurn(turn)
       }, 3000)
-      setTimeout(() => {
-        game.end()
-        console.log(game.getP1(), game.getP2(), game.getResults())
-      }, 6000)
     } catch (err) {
       handleError(err, 'Finding a tic tac toe match', undefined, setToast)
       setGameState('pre game')
@@ -89,7 +98,7 @@ const TicTacToe: React.FC = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
+  console.log(turn)
   return (
     <div className={styles.container}>
       {gameState !== 'in progress' && (
