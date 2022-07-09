@@ -14,7 +14,7 @@ const CreateCanvas = () => {
     }
   }
 
-  const drawTable = (canvasDimensions: CanvasDimensions, ctx: CanvasRenderingContext2D) => {
+  const drawBoard = (canvasDimensions: CanvasDimensions, ctx: CanvasRenderingContext2D) => {
     const { width, height } = canvasDimensions
 
     ctx.beginPath()
@@ -43,7 +43,7 @@ const CreateCanvas = () => {
     const ctx = canvas.getContext('2d')
     if (ctx) {
       ctx.clearRect(0, 0, width, height)
-      drawTable({ width, height }, ctx)
+      drawBoard({ width, height }, ctx)
     }
   }
 
@@ -82,7 +82,7 @@ const CreateCanvas = () => {
     return cellsCenterCoordinates
   }
 
-  const findClosestTableCellToTheMouseClickCoordinates = (
+  const findClosestBoardCellToTheMouseClickCoordinates = (
     cellsCenterCoordinates: CellCenterCoordinates[][],
     mouseCoordinatesRelativeToCanvas: { x: number; y: number }
   ) => {
@@ -124,11 +124,11 @@ const CreateCanvas = () => {
   return {
     resize,
     reset,
-    drawTable,
+    drawBoard,
     drawO,
     drawX,
     getCellsCenterCoordinates,
-    findClosestTableCellToTheMouseClickCoordinates
+    findClosestBoardCellToTheMouseClickCoordinates
   }
 }
 

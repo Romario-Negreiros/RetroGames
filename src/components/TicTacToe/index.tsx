@@ -29,8 +29,8 @@ const TicTacToe: React.FC = () => {
       const canvasElement = event.currentTarget
       const ctx = canvasElement.getContext('2d')
       if (ctx) {
-        const table = canvas.getCellsCenterCoordinates(canvasDimensions.width, canvasDimensions.height)
-        const { coordinates, row, col } = canvas.findClosestTableCellToTheMouseClickCoordinates(table, {
+        const board = canvas.getCellsCenterCoordinates(canvasDimensions.width, canvasDimensions.height)
+        const { coordinates, row, col } = canvas.findClosestBoardCellToTheMouseClickCoordinates(board, {
           x: mouseXPositionRelativeToCanvas,
           y: mouseYPositionRelativeToCanvas
         })
@@ -63,7 +63,7 @@ const TicTacToe: React.FC = () => {
       const ctx = canvasElement.getContext('2d')
       if (ctx) {
         canvas.resize(canvasElement)
-        canvas.drawTable({ width, height }, ctx)
+        canvas.drawBoard({ width, height }, ctx)
       }
     }
   }, 500)
@@ -88,7 +88,7 @@ const TicTacToe: React.FC = () => {
     const ctx = canvasElement.getContext('2d')
     if (ctx) {
       canvas.resize(canvasElement)
-      canvas.drawTable({ width, height }, ctx)
+      canvas.drawBoard({ width, height }, ctx)
 
       window.addEventListener('resize', handleWindowResize)
     } else {
