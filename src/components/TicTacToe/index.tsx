@@ -34,6 +34,10 @@ const TicTacToe: React.FC = () => {
           x: mouseXPositionRelativeToCanvas,
           y: mouseYPositionRelativeToCanvas
         })
+        if (game.checkIfCellIsAlreadyMarked(row, col)) {
+          return
+        }
+
         if (turn?.shape === 'x') {
           canvas.drawX(ctx, coordinates, canvasDimensions.width / 3)
         } else {
@@ -98,16 +102,16 @@ const TicTacToe: React.FC = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  console.log(turn)
+
   return (
     <div className={styles.container}>
       {gameState !== 'in progress' && (
         <ClientOnlyPortal selector="#modal_container">
           <section className={styles.game_modal_container}>
             <h2>Tic Tac Toe</h2>
-            <div className={styles.game_state_container}>
+            <div>
               {gameState === 'finding a match' && <Waiting waitingFor="Finding an opponent..." />}
-              {gameState === 'game ended' && <div>results oaskaos</div>}
+              {gameState === 'game ended' && <p className={styles.game_results}>{game.getResults().message}</p>}
             </div>
             <button className="button" onClick={handleClickOnButton}>
               Find a match
