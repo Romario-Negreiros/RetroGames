@@ -33,6 +33,11 @@
   color: var(--primary-font);
 }
 
+.game_results {
+  font-size: clamp(1.6rem, 2.5vw, 2rem);
+  color: var(--secondary-font);
+}
+
 
 @media screen and (min-width: 440px) {
   .container canvas {
