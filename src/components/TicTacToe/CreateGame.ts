@@ -1,7 +1,14 @@
 import { handleError } from '@utils/handlers'
 
-import { DocumentData, QuerySnapshot, FirestoreError, Unsubscribe, WithFieldValue } from 'firebase/firestore'
-import type { GameStates, Player } from './types'
+import {
+  DocumentData,
+  DocumentSnapshot,
+  QuerySnapshot,
+  FirestoreError,
+  Unsubscribe,
+  WithFieldValue
+} from 'firebase/firestore'
+import type { GameStates, Match, Player, Results } from './types'
 import type { User } from '@contexts/authContext'
 import type { IToast } from '@contexts/toastContext'
 
@@ -19,15 +26,23 @@ const CreateGame = (
     onNext: (snapshot: QuerySnapshot<DocumentData>) => void,
     onError: (err: FirestoreError) => void
   ) => Unsubscribe,
+  setListenerOnDoc: (
+    pathSegments: string[],
+    docId: string,
+    onNext: (snapshot: DocumentSnapshot<DocumentData>) => void,
+    onError: (err: FirestoreError) => void
+  ) => Unsubscribe,
   setToast: (toast: IToast) => void,
   deleteDoc: (pathSegments: string[], docId: string) => Promise<void>,
+  updateDoc: (pathSegments: string[], docId: string, data: WithFieldValue<DocumentData>) => Promise<void>,
+  getDoc: <I>(PathSegments: string[], docId: string) => Promise<DocumentSnapshot<I>>,
   reset: (ctx: HTMLCanvasElement) => void
 ) => {
   const players: { p1: Player | null; p2: Player | null } = {
     p1: null,
     p2: null
   }
-  let results: { winner: Player | null; loser: Player | null; message: string } = {
+  let results: Results = {
     winner: null,
     loser: null,
     message: ''
@@ -95,12 +110,14 @@ const CreateGame = (
       unsubscribe = null
     }
 
-    // setListenerOnDoc
-    unsubscribe = setListenerOnCollection(
+    unsubscribe = setListenerOnDoc(
       ['games', 'tic-tac-toe', 'matches'],
       `${players.p1?.name} x ${players.p2?.name}`,
       snapshot => {
-
+        if (snapshot.exists()) {
+          const matchData = snapshot.data() as Match
+          board = matchData.board
+        }
       },
       err => {
         handleError(err, 'Listening to match changes', undefined, setToast)
@@ -111,13 +128,14 @@ const CreateGame = (
     return turn
   }
 
-  const end = () => {
+  const end = async () => {
     setGameState('game ended')
     players.p1 = null
     players.p2 = null
     board = board.map(row => {
       return row.map(() => '')
     })
+    // get the doc
     setTurn(null)
     // reset canvas to its initial state
     const canvas = document.querySelector('canvas') as HTMLCanvasElement
@@ -126,7 +144,7 @@ const CreateGame = (
 
   const checkIfCellIsAlreadyMarked = (row: number, col: number) => Boolean(board[row][col])
 
-  const checkBoard = () => {
+  const checkBoard = async () => {
     let hasGameEnded = false
 
     for (const row of board) {
@@ -170,16 +188,19 @@ const CreateGame = (
       hasGameEnded = true
     }
 
-    if (hasGameEnded) end()
+    if (hasGameEnded) await end()
   }
 
   const getP1 = () => players.p1
   const getP2 = () => players.p2
   const getResults = () => results
 
-  const setMovement = (row: number, col: number, player: 'p1' | 'p2') => {
+  const setMovement = async (row: number, col: number, player: 'p1' | 'p2') => {
     board[row][col] = players[player]?.shape as string
-    checkBoard()
+    await updateDoc(['games', 'tic-tac-toe', 'matches'], `${players.p1?.name} x ${players.p2?.name}`, {
+      board
+    })
+    await checkBoard()
   }
 
   const setResults = (winnerShape?: 'x' | 'o', clear?: boolean) => {
