@@ -22,11 +22,17 @@ export interface Results {
   message: string
 }
 
+type Row = Array<'x' | 'o'>
+
 export interface Match {
   players: {
     p1: Player
     p2: Player
   }
   results: Results
-  board: Array<Array<'x' | 'o'>>
+  board: {
+    row0: Row
+    row1: Row
+    row2: Row
+  }
 }
