@@ -1,7 +1,7 @@
 import React from 'react'
 import CreateCanvas from './CreateCanvas'
 import { handleError, handleToast } from '@utils/handlers'
-import { useToast } from '@utils/hooks'
+import { useToast, useAuth, useFirestore } from '@utils/hooks'
 import { throttle } from '@utils/helpers'
 import CreateGame from './CreateGame'
 
@@ -10,6 +10,7 @@ import { ClientOnlyPortal, Waiting } from '../'
 import styles from '@styles/components/ticTacToe.module.css'
 
 import type { GameStates, CanvasDimensions, Player } from './types'
+import type { User } from '@contexts/authContext'
 
 const canvas = CreateCanvas()
 
@@ -18,7 +19,12 @@ const TicTacToe: React.FC = () => {
   const [turn, setTurn] = React.useState<Player | null>(null)
   const [canvasDimensions, setCanvasDimensions] = React.useState<CanvasDimensions>({ width: 0, height: 0 })
   const { setToast } = useToast()
-  const game = React.useMemo(() => CreateGame(setGameState, setTurn, canvas.reset), [])
+  const { user } = useAuth()
+  const { setDoc, setListenerOnCollection, deleteDoc } = useFirestore()
+  const game = React.useMemo(
+    () => CreateGame(setGameState, setTurn, setDoc, setListenerOnCollection, setToast, deleteDoc, canvas.reset),
+    [deleteDoc, setDoc, setListenerOnCollection, setToast]
+  )
 
   const handleClickOnCanvas = (event: React.MouseEvent<HTMLCanvasElement>, canvasDimensions: CanvasDimensions) => {
     const { x, y } = event.currentTarget.getBoundingClientRect()
@@ -68,13 +74,11 @@ const TicTacToe: React.FC = () => {
     }
   }, 500)
 
-  const handleClickOnButton = () => {
+  const handleClickOnButton = async () => {
     try {
-      game.findAMatch()
-      setTimeout(() => {
-        const turn = game.start()
-        setTurn(turn)
-      }, 3000)
+      await game.findAMatch(user as User)
+      // const turn = game.start()
+      // setTurn(turn)
     } catch (err) {
       handleError(err, 'Finding a tic tac toe match', undefined, setToast)
       setGameState('pre game')
