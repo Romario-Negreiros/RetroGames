@@ -55,6 +55,7 @@ const CreateGame = (
   let unsubscribe: Unsubscribe | null = null
 
   const findAMatch = async (user: User) => {
+    setGameState('finding a match')
     await setDoc(['games', 'tic-tac-toe', 'queue'], user.displayName as string, { name: user.displayName })
 
     const currentUserName = user.displayName as string
@@ -83,7 +84,12 @@ const CreateGame = (
 
             await setDoc(['games', 'tic-tac-toe', 'matches'], `${players.p1?.name} x ${players.p2?.name}`, {
               players,
-              board
+              board: {
+                // doing this because firestore does not accept nested arrays .................. ok
+                row0: board[0],
+                row1: board[1],
+                row2: board[2]
+              }
             })
 
             hasFoundAMatch = true
@@ -96,13 +102,13 @@ const CreateGame = (
         }
       )
     })
-
     if (hasFoundAMatch) {
       await deleteDoc(['games', 'tic-tac-toe', 'queue'], currentUserName)
     }
   }
 
   const start = () => {
+    console.log(players)
     setGameState('in progress')
     setResults(undefined, true)
     if (unsubscribe) {
@@ -116,7 +122,8 @@ const CreateGame = (
       snapshot => {
         if (snapshot.exists()) {
           const matchData = snapshot.data() as Match
-          board = matchData.board
+          board = [matchData.board.row0, matchData.board.row1, matchData.board.row2]
+          // draw in the canvas the new shape drew by the other player
         }
       },
       err => {
@@ -128,31 +135,29 @@ const CreateGame = (
     return turn
   }
 
-  const end = async () => {
-    setGameState('game ended')
-    players.p1 = null
-    players.p2 = null
-    board = board.map(row => {
-      return row.map(() => '')
-    })
-    // get the doc
-    setTurn(null)
-    // reset canvas to its initial state
-    const canvas = document.querySelector('canvas') as HTMLCanvasElement
-    reset(canvas)
-  }
-
   const checkIfCellIsAlreadyMarked = (row: number, col: number) => Boolean(board[row][col])
+
+  const setMovement = async (row: number, col: number, player: 'p1' | 'p2') => {
+    board[row][col] = players[player]?.shape as string
+    await updateDoc(['games', 'tic-tac-toe', 'matches'], `${players.p1?.name} x ${players.p2?.name}`, {
+      board: {
+        row0: board[0],
+        row1: board[1],
+        row2: board[2]
+      }
+    })
+    await checkBoard()
+  }
 
   const checkBoard = async () => {
     let hasGameEnded = false
 
     for (const row of board) {
       if (row.every(col => col === 'x')) {
-        setResults('x')
+        await setResults('x')
         hasGameEnded = true
       } else if (row.every(col => col === 'o')) {
-        setResults('o')
+        await setResults('o')
         hasGameEnded = true
       }
     }
@@ -161,10 +166,10 @@ const CreateGame = (
       if (board.indexOf(row) === 0) {
         for (const col in row) {
           if (board[0][col] === 'x' && board[1][col] === 'x' && board[2][col] === 'x') {
-            setResults('x')
+            await setResults('x')
             hasGameEnded = true
           } else if (board[0][col] === 'o' && board[1][col] === 'o' && board[2][col] === 'o') {
-            setResults('o')
+            await setResults('o')
             hasGameEnded = true
           }
         }
@@ -172,38 +177,26 @@ const CreateGame = (
     }
 
     if (board[0][0] === 'x' && board[1][1] === 'x' && board[2][2] === 'x') {
-      setResults('x')
+      await setResults('x')
       hasGameEnded = true
     } else if (board[0][0] === 'o' && board[1][1] === 'o' && board[2][2] === 'o') {
-      setResults('o')
+      await setResults('o')
       hasGameEnded = true
     } else if (board[0][2] === 'x' && board[1][1] === 'x' && board[2][0] === 'x') {
-      setResults('x')
+      await setResults('x')
       hasGameEnded = true
     } else if (board[0][2] === 'o' && board[1][1] === 'o' && board[2][0] === 'o') {
-      setResults('o')
+      await setResults('o')
       hasGameEnded = true
     } else if (board.every(row => row.every(col => col === 'x' || col === 'o'))) {
-      setResults()
+      await setResults()
       hasGameEnded = true
     }
 
     if (hasGameEnded) await end()
   }
 
-  const getP1 = () => players.p1
-  const getP2 = () => players.p2
-  const getResults = () => results
-
-  const setMovement = async (row: number, col: number, player: 'p1' | 'p2') => {
-    board[row][col] = players[player]?.shape as string
-    await updateDoc(['games', 'tic-tac-toe', 'matches'], `${players.p1?.name} x ${players.p2?.name}`, {
-      board
-    })
-    await checkBoard()
-  }
-
-  const setResults = (winnerShape?: 'x' | 'o', clear?: boolean) => {
+  const setResults = async (winnerShape?: 'x' | 'o', clear?: boolean) => {
     if (clear) {
       results = {
         winner: null,
@@ -213,24 +206,53 @@ const CreateGame = (
       return
     }
     if (!winnerShape) {
-      results = {
-        winner: null,
-        loser: null,
-        message: "It's a tie!"
-      }
+      await updateDoc(['games', 'tic-tac-toe', 'matches'], `${players.p1?.name} x ${players.p2?.name}`, {
+        results: {
+          winner: null,
+          loser: null,
+          message: "It's a tie!"
+        }
+      })
       return
     }
-    results =
-      players.p1?.shape === winnerShape ? {
-        winner: players.p1,
-        loser: players.p2,
-        message: `${players.p1.name} is the winner!`
-      } : {
-        winner: players.p2,
-        loser: players.p1,
-        message: `${players.p2?.name} is the winner!`
-      }
+
+    await updateDoc(['games', 'tic-tac-toe', 'matches'], `${players.p1?.name} x ${players.p2?.name}`, {
+      results:
+        players.p1?.shape === winnerShape ? {
+          winner: players.p1,
+          loser: players.p2,
+          message: `${players.p1.name} is the winner!`
+        } : {
+          winner: players.p2,
+          loser: players.p1,
+          message: `${players.p2?.name} is the winner!`
+        }
+    })
   }
+
+  const end = async () => {
+    const doc = await getDoc<Match>(['games', 'tic-tac-toe', 'matches'], `${players.p1?.name} x ${players.p2?.name}`)
+    if (doc.exists()) {
+      const match = doc.data()
+      results = match.results
+    }
+    await deleteDoc(['games', 'tic-tac-toe', 'matches'], `${players.p1?.name} x ${players.p2?.name}`)
+    setGameState('game ended')
+    players.p1 = null
+    players.p2 = null
+    board = board.map(row => {
+      return row.map(() => '')
+    })
+    setTurn(null)
+    // reset canvas to its initial state
+    const canvas = document.querySelector('canvas') as HTMLCanvasElement
+    reset(canvas)
+  }
+
+  const getP1 = () => players.p1
+  const getP2 = () => players.p2
+  const getResults = () => results
+
   return {
     findAMatch,
     start,
