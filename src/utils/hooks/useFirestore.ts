@@ -9,7 +9,9 @@ import {
   FieldPath,
   WhereFilterOp,
   DocumentReference,
-  Query
+  Query,
+  QuerySnapshot,
+  FirestoreError
 } from 'firebase/firestore'
 
 type WhereArgs = [fieldPath: string | FieldPath, opStr: WhereFilterOp, value: unknown]
@@ -52,6 +54,26 @@ const useFirestore = () => {
     await firestore.setDoc(doc, data)
   }
 
+  const setListenerOnCollection = (
+    pathSegments: string[],
+    currentUserName: string,
+    onNext: (snapshot: QuerySnapshot<DocumentData>) => void,
+    onError: (err: FirestoreError) => void
+  ) => {
+    const collection = getCollection(pathSegments)
+    const query = createQuery(collection, ['name', '!=', currentUserName])
+    const unsubscribe = firestore.onSnapshot(query,
+      snapshot => {
+        onNext(snapshot)
+      },
+      err => {
+        onError(err)
+      }
+    )
+
+    return unsubscribe
+  }
+
   const updateDoc = async (pathSegments: string[], docId: string, data: WithFieldValue<DocumentData>) => {
     const doc = getDocReference(pathSegments, docId)
     await firestore.updateDoc(doc, data)
@@ -66,6 +88,7 @@ const useFirestore = () => {
     getDocs,
     getDoc,
     setDoc,
+    setListenerOnCollection,
     updateDoc,
     deleteDoc
   }
