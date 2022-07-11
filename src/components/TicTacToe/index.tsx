@@ -20,13 +20,25 @@ const TicTacToe: React.FC = () => {
   const [canvasDimensions, setCanvasDimensions] = React.useState<CanvasDimensions>({ width: 0, height: 0 })
   const { setToast } = useToast()
   const { user } = useAuth()
-  const { setDoc, setListenerOnCollection, deleteDoc } = useFirestore()
+  const { deleteDoc, getDoc, setDoc, setListenerOnCollection, setListenerOnDoc, updateDoc } = useFirestore()
   const game = React.useMemo(
-    () => CreateGame(setGameState, setTurn, setDoc, setListenerOnCollection, setToast, deleteDoc, canvas.reset),
-    [deleteDoc, setDoc, setListenerOnCollection, setToast]
+    () =>
+      CreateGame(
+        setGameState,
+        setTurn,
+        setDoc,
+        setListenerOnCollection,
+        setListenerOnDoc,
+        setToast,
+        deleteDoc,
+        updateDoc,
+        getDoc,
+        canvas.reset
+      ),
+    [deleteDoc, getDoc, setDoc, setListenerOnCollection, setListenerOnDoc, setToast, updateDoc]
   )
 
-  const handleClickOnCanvas = (event: React.MouseEvent<HTMLCanvasElement>, canvasDimensions: CanvasDimensions) => {
+  const handleClickOnCanvas = async (event: React.MouseEvent<HTMLCanvasElement>, canvasDimensions: CanvasDimensions) => {
     const { x, y } = event.currentTarget.getBoundingClientRect()
     const { clientX, clientY } = event
     const mouseXPositionRelativeToCanvas = clientX - x
@@ -51,10 +63,10 @@ const TicTacToe: React.FC = () => {
         }
 
         if (turn?.id === 1) {
-          game.setMovement(row, col, 'p1')
+          await game.setMovement(row, col, 'p1')
           setTurn(game.getP2())
         } else {
-          game.setMovement(row, col, 'p2')
+          await game.setMovement(row, col, 'p2')
           setTurn(game.getP1())
         }
       }
@@ -77,8 +89,8 @@ const TicTacToe: React.FC = () => {
   const handleClickOnButton = async () => {
     try {
       await game.findAMatch(user as User)
-      // const turn = game.start()
-      // setTurn(turn)
+      const turn = game.start()
+      setTurn(turn)
     } catch (err) {
       handleError(err, 'Finding a tic tac toe match', undefined, setToast)
       setGameState('pre game')
@@ -123,7 +135,10 @@ const TicTacToe: React.FC = () => {
           </section>
         </ClientOnlyPortal>
       )}
-      <canvas onClick={event => handleClickOnCanvas(event, canvasDimensions)}>
+      <canvas
+        style={{ cursor: turn?.name === user?.displayName ? 'pointer' : 'not-allowed' }}
+        onClick={event => (turn?.name === user?.displayName ? handleClickOnCanvas(event, canvasDimensions) : '')}
+      >
         <p>Sorry but your browser doesn&aphos;t support the game!</p>
       </canvas>
     </div>
