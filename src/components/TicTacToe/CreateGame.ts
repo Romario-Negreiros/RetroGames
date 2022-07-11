@@ -1,4 +1,9 @@
+import { handleError } from '@utils/handlers'
+
+import { DocumentData, QuerySnapshot, FirestoreError, Unsubscribe, WithFieldValue } from 'firebase/firestore'
 import type { GameStates, Player } from './types'
+import type { User } from '@contexts/authContext'
+import type { IToast } from '@contexts/toastContext'
 
 const generateRandomNumberInRange1to2 = () => {
   return Math.ceil(Math.random() * 2)
@@ -7,6 +12,15 @@ const generateRandomNumberInRange1to2 = () => {
 const CreateGame = (
   setGameState: (gameState: GameStates) => void,
   setTurn: (turn: Player | null) => void,
+  setDoc: (pathSegments: string[], docId: string, data: WithFieldValue<DocumentData>) => Promise<void>,
+  setListenerOnCollection: (
+    pathSegments: string[],
+    currentUserName: string,
+    onNext: (snapshot: QuerySnapshot<DocumentData>) => void,
+    onError: (err: FirestoreError) => void
+  ) => Unsubscribe,
+  setToast: (toast: IToast) => void,
+  deleteDoc: (pathSegments: string[], docId: string) => Promise<void>,
   reset: (ctx: HTMLCanvasElement) => void
 ) => {
   const players: { p1: Player | null; p2: Player | null } = {
@@ -23,25 +37,75 @@ const CreateGame = (
     ['', '', ''],
     ['', '', '']
   ]
+  let unsubscribe: Unsubscribe | null = null
 
-  const findAMatch = () => {
-    setGameState('finding a match')
+  const findAMatch = async (user: User) => {
+    await setDoc(['games', 'tic-tac-toe', 'queue'], user.displayName as string, { name: user.displayName })
 
-    players.p1 = {
-      id: 1,
-      name: 'roamrio',
-      shape: generateRandomNumberInRange1to2() === 1 ? 'x' : 'o'
-    }
-    players.p2 = {
-      id: 2,
-      name: 'oamsoasm',
-      shape: players.p1.shape === 'x' ? 'o' : 'x'
+    const currentUserName = user.displayName as string
+    let hasFoundAMatch = false
+
+    await new Promise<void>((resolve, reject) => {
+      unsubscribe = setListenerOnCollection(
+        ['games', 'tic-tac-toe', 'queue'],
+        currentUserName,
+        async snapshot => {
+          const usersInQueue = snapshot.docs
+          if (usersInQueue.length) {
+            const userWithLongestTimeInQueue = usersInQueue[usersInQueue.length - 1].data() as { name: string }
+            const randomPlayer = Math.ceil(Math.random() * 2) as 1 | 2
+            const randomShape = Math.ceil(Math.random() * 2) === 1 ? 'x' : 'o'
+            players[`p${randomPlayer}` as 'p1' | 'p2'] = {
+              ...userWithLongestTimeInQueue,
+              id: randomPlayer,
+              shape: randomShape
+            }
+            players[`p${randomPlayer === 1 ? 2 : 1}`] = {
+              name: currentUserName,
+              id: randomPlayer === 1 ? 2 : 1,
+              shape: randomShape === 'x' ? 'o' : 'x'
+            }
+
+            await setDoc(['games', 'tic-tac-toe', 'matches'], `${players.p1?.name} x ${players.p2?.name}`, {
+              players,
+              board
+            })
+
+            hasFoundAMatch = true
+
+            resolve()
+          }
+        },
+        err => {
+          reject(err)
+        }
+      )
+    })
+
+    if (hasFoundAMatch) {
+      await deleteDoc(['games', 'tic-tac-toe', 'queue'], currentUserName)
     }
   }
 
   const start = () => {
     setGameState('in progress')
     setResults(undefined, true)
+    if (unsubscribe) {
+      unsubscribe()
+      unsubscribe = null
+    }
+
+    // setListenerOnDoc
+    unsubscribe = setListenerOnCollection(
+      ['games', 'tic-tac-toe', 'matches'],
+      `${players.p1?.name} x ${players.p2?.name}`,
+      snapshot => {
+
+      },
+      err => {
+        handleError(err, 'Listening to match changes', undefined, setToast)
+      }
+    )
 
     const turn = generateRandomNumberInRange1to2() === 1 ? players.p1 : players.p2
     return turn
