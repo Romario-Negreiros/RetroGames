@@ -35,10 +35,14 @@ const TicTacToe: React.FC = () => {
         getDoc,
         canvas.reset
       ),
-    [deleteDoc, getDoc, setDoc, setListenerOnCollection, setListenerOnDoc, setToast, updateDoc]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   )
 
-  const handleClickOnCanvas = async (event: React.MouseEvent<HTMLCanvasElement>, canvasDimensions: CanvasDimensions) => {
+  const handleClickOnCanvas = async (
+    event: React.MouseEvent<HTMLCanvasElement>,
+    canvasDimensions: CanvasDimensions
+  ) => {
     const { x, y } = event.currentTarget.getBoundingClientRect()
     const { clientX, clientY } = event
     const mouseXPositionRelativeToCanvas = clientX - x
@@ -86,7 +90,7 @@ const TicTacToe: React.FC = () => {
     }
   }, 500)
 
-  const handleClickOnButton = async () => {
+  const handleClickOnFindAMatchButton = async () => {
     try {
       await game.findAMatch(user as User)
       const turn = game.start()
@@ -95,6 +99,11 @@ const TicTacToe: React.FC = () => {
       handleError(err, 'Finding a tic tac toe match', undefined, setToast)
       setGameState('pre game')
     }
+  }
+
+  // remember to unsubscribe if component unmounts
+  const handleClickOnCancelButton = async () => {
+    'porra'
   }
 
   React.useEffect(() => {
@@ -129,9 +138,14 @@ const TicTacToe: React.FC = () => {
               {gameState === 'finding a match' && <Waiting waitingFor="Finding an opponent..." />}
               {gameState === 'game ended' && <p className={styles.game_results}>{game.getResults().message}</p>}
             </div>
-            <button className="button" onClick={handleClickOnButton}>
+            <button className="button" onClick={handleClickOnFindAMatchButton}>
               Find a match
             </button>
+            {gameState === 'finding a match' && (
+              <button className="button" onClick={handleClickOnCancelButton}>
+                Cancel
+              </button>
+            )}
           </section>
         </ClientOnlyPortal>
       )}
