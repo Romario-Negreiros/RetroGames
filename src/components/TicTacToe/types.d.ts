@@ -16,9 +16,17 @@ export interface Player {
   shape: 'x' | 'o'
 }
 
+export interface Results {
+  winner: Player | null
+  loser: Player | null
+  message: string
+}
+
 export interface Match {
   players: {
     p1: Player
     p2: Player
   }
+  results: Results
+  board: Array<Array<'x' | 'o'>>
 }
