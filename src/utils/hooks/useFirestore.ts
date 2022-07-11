@@ -5,6 +5,7 @@ import { joinPathSegmentsWithSlash } from '@utils/helpers'
 import {
   CollectionReference,
   DocumentData,
+  DocumentSnapshot,
   WithFieldValue,
   FieldPath,
   WhereFilterOp,
@@ -54,6 +55,26 @@ const useFirestore = () => {
     await firestore.setDoc(doc, data)
   }
 
+  const setListenerOnDoc = (
+    pathSegments: string[],
+    docId: string,
+    onNext: (snapshot: DocumentSnapshot<DocumentData>) => void,
+    onError: (err: FirestoreError) => void
+  ) => {
+    const doc = getDocReference(pathSegments, docId)
+    const unsubscribe = firestore.onSnapshot(
+      doc,
+      snapshot => {
+        onNext(snapshot)
+      },
+      err => {
+        onError(err)
+      }
+    )
+
+    return unsubscribe
+  }
+
   const setListenerOnCollection = (
     pathSegments: string[],
     currentUserName: string,
@@ -62,7 +83,8 @@ const useFirestore = () => {
   ) => {
     const collection = getCollection(pathSegments)
     const query = createQuery(collection, ['name', '!=', currentUserName])
-    const unsubscribe = firestore.onSnapshot(query,
+    const unsubscribe = firestore.onSnapshot(
+      query,
       snapshot => {
         onNext(snapshot)
       },
@@ -89,6 +111,7 @@ const useFirestore = () => {
     getDoc,
     setDoc,
     setListenerOnCollection,
+    setListenerOnDoc,
     updateDoc,
     deleteDoc
   }
