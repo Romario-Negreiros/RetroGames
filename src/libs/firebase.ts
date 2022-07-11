@@ -21,7 +21,8 @@ import {
   updateDoc,
   deleteDoc,
   doc,
-  limit
+  limit,
+  onSnapshot
 } from 'firebase/firestore'
 
 const firebaseConfig = {
@@ -57,7 +58,8 @@ const firebase = {
     updateDoc,
     deleteDoc,
     doc,
-    limit
+    limit,
+    onSnapshot
   }
 }
 
