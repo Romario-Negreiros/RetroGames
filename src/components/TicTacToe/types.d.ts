@@ -15,3 +15,10 @@ export interface Player {
   name: string
   shape: 'x' | 'o'
 }
+
+export interface Match {
+  players: {
+    p1: Player
+    p2: Player
+  }
+}
