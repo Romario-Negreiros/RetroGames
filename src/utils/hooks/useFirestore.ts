@@ -15,7 +15,7 @@ import {
   FirestoreError
 } from 'firebase/firestore'
 
-type WhereArgs = [fieldPath: string | FieldPath, opStr: WhereFilterOp, value: unknown]
+export type WhereArgs = [fieldPath: string | FieldPath, opStr: WhereFilterOp, value: unknown]
 
 const useFirestore = () => {
   const { firestore } = firebase
@@ -77,12 +77,12 @@ const useFirestore = () => {
 
   const setListenerOnCollection = (
     pathSegments: string[],
-    currentUserName: string,
+    whereArgs: WhereArgs,
     onNext: (snapshot: QuerySnapshot<DocumentData>) => void,
     onError: (err: FirestoreError) => void
   ) => {
     const collection = getCollection(pathSegments)
-    const query = createQuery(collection, ['name', '!=', currentUserName])
+    const query = createQuery(collection, whereArgs)
     const unsubscribe = firestore.onSnapshot(
       query,
       snapshot => {
