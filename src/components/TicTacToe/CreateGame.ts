@@ -19,6 +19,7 @@ const canvas = CreateCanvas()
 const CreateGame = (
   setGameState: (gameState: GameStates) => void,
   setTurn: (turn: Player | null) => void,
+  setPlayTimer: (playTimer: number | null) => void,
   setDoc: (pathSegments: string[], docId: string, data: WithFieldValue<DocumentData>) => Promise<void>,
   setListenerOnCollection: (
     pathSegments: string[],
@@ -70,7 +71,6 @@ const CreateGame = (
         async snapshot => {
           const usersInQueue = snapshot.docs
           if (usersInQueue.length) {
-            console.log(usersInQueue)
             const userWithLongestTimeInQueue = usersInQueue[usersInQueue.length - 1].data() as {
               name: string
               timeStamp: number
@@ -89,7 +89,6 @@ const CreateGame = (
               name: p2,
               shape: 'o'
             }
-            console.log(players)
             await setDoc(['games', 'tic-tac-toe', 'matches'], `${players.p1?.name} x ${players.p2?.name}`, {
               players,
               turn: players.p1,
@@ -164,6 +163,10 @@ const CreateGame = (
 
   const checkIfCellIsAlreadyMarked = (row: number, col: number) => Boolean(board[row][col])
 
+  const endMatchDueToInactivity = (inactivePlayerShape: 'x' | 'o') => {
+    setResults(inactivePlayerShape === 'x' ? 'o' : 'x', false, true)
+  }
+
   const setMovement = async (row: number, col: number, player: 'p1' | 'p2') => {
     board[row][col] = players[player]?.shape as string
     await updateDoc(['games', 'tic-tac-toe', 'matches'], `${players.p1?.name} x ${players.p2?.name}`, {
@@ -215,7 +218,7 @@ const CreateGame = (
     }
   }
 
-  const setResults = async (winnerShape?: 'x' | 'o', clear?: boolean) => {
+  const setResults = async (winnerShape?: 'x' | 'o', clear?: boolean, inactivtyWin?: boolean) => {
     if (clear) {
       results = {
         winner: null,
@@ -240,11 +243,11 @@ const CreateGame = (
         players.p1?.shape === winnerShape ? {
           winner: players.p1,
           loser: players.p2,
-          message: `${players.p1.name} is the winner!`
+          message: `${players.p1.name} is the winner ${inactivtyWin ? `due to ${players.p2?.name}'s inactivity` : ''}!`
         } : {
           winner: players.p2,
           loser: players.p1,
-          message: `${players.p2?.name} is the winner!`
+          message: `${players.p2?.name} is the winner ${inactivtyWin ? `due to ${players.p1?.name}'s inactivity` : ''}!`
         }
     })
   }
@@ -258,6 +261,7 @@ const CreateGame = (
       return row.map(() => '')
     })
     setTurn(null)
+    setPlayTimer(null)
     // reset canvas to its initial state
     const canvasElement = document.querySelector('canvas') as HTMLCanvasElement
     canvas.reset(canvasElement)
@@ -277,6 +281,7 @@ const CreateGame = (
     getResults,
     unsubscribeFromListener,
     setMovement,
+    endMatchDueToInactivity,
     checkIfCellIsAlreadyMarked
   }
 }
