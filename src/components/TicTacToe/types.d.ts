@@ -29,10 +29,15 @@ export interface Match {
     p1: Player
     p2: Player
   }
-  results: Results
+  turn: Player
   board: {
     row0: Row
     row1: Row
     row2: Row
+  }
+  results?: Results
+  markedCell?: {
+    row: number
+    col: number
   }
 }
