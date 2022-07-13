@@ -20,7 +20,7 @@ const TicTacToe: React.FC = () => {
   const [canvasDimensions, setCanvasDimensions] = React.useState<CanvasDimensions>({ width: 0, height: 0 })
   const { setToast } = useToast()
   const { user } = useAuth()
-  const { deleteDoc, getDoc, setDoc, setListenerOnCollection, setListenerOnDoc, updateDoc } = useFirestore()
+  const { deleteDoc, setDoc, setListenerOnCollection, setListenerOnDoc, updateDoc } = useFirestore()
   const game = React.useMemo(
     () =>
       CreateGame(
@@ -31,9 +31,7 @@ const TicTacToe: React.FC = () => {
         setListenerOnDoc,
         setToast,
         deleteDoc,
-        updateDoc,
-        getDoc,
-        canvas.reset
+        updateDoc
       ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -68,10 +66,8 @@ const TicTacToe: React.FC = () => {
 
         if (turn?.id === 1) {
           await game.setMovement(row, col, 'p1')
-          setTurn(game.getP2())
         } else {
           await game.setMovement(row, col, 'p2')
-          setTurn(game.getP1())
         }
       }
     }
@@ -93,17 +89,17 @@ const TicTacToe: React.FC = () => {
   const handleClickOnFindAMatchButton = async () => {
     try {
       await game.findAMatch(user as User)
-      const turn = game.start()
-      setTurn(turn)
+      game.start()
     } catch (err) {
       handleError(err, 'Finding a tic tac toe match', undefined, setToast)
       setGameState('pre game')
     }
   }
 
-  // remember to unsubscribe if component unmounts
   const handleClickOnCancelButton = async () => {
-    'porra'
+    await deleteDoc(['games', 'tic-tac-toe', 'queue'], user?.displayName as string)
+    game.unsubscribeFromListener()
+    setGameState('pre game')
   }
 
   React.useEffect(() => {
@@ -121,9 +117,8 @@ const TicTacToe: React.FC = () => {
     }
 
     return () => {
-      if (ctx) {
-        window.removeEventListener('resize', handleWindowResize)
-      }
+      window.removeEventListener('resize', handleWindowResize)
+      game.unsubscribeFromListener()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
