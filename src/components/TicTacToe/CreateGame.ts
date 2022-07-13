@@ -1,6 +1,7 @@
 import { handleError } from '@utils/handlers'
+import CreateCanvas from './CreateCanvas'
 
-import {
+import type {
   DocumentData,
   DocumentSnapshot,
   QuerySnapshot,
@@ -11,10 +12,9 @@ import {
 import type { GameStates, Match, Player, Results } from './types'
 import type { User } from '@contexts/authContext'
 import type { IToast } from '@contexts/toastContext'
+import type { WhereArgs } from '@utils/hooks/useFirestore'
 
-const generateRandomNumberInRange1to2 = () => {
-  return Math.ceil(Math.random() * 2)
-}
+const canvas = CreateCanvas()
 
 const CreateGame = (
   setGameState: (gameState: GameStates) => void,
@@ -22,7 +22,7 @@ const CreateGame = (
   setDoc: (pathSegments: string[], docId: string, data: WithFieldValue<DocumentData>) => Promise<void>,
   setListenerOnCollection: (
     pathSegments: string[],
-    currentUserName: string,
+    whereArgs: WhereArgs,
     onNext: (snapshot: QuerySnapshot<DocumentData>) => void,
     onError: (err: FirestoreError) => void
   ) => Unsubscribe,
@@ -34,9 +34,7 @@ const CreateGame = (
   ) => Unsubscribe,
   setToast: (toast: IToast) => void,
   deleteDoc: (pathSegments: string[], docId: string) => Promise<void>,
-  updateDoc: (pathSegments: string[], docId: string, data: WithFieldValue<DocumentData>) => Promise<void>,
-  getDoc: <I>(PathSegments: string[], docId: string) => Promise<DocumentSnapshot<I>>,
-  reset: (ctx: HTMLCanvasElement) => void
+  updateDoc: (pathSegments: string[], docId: string, data: WithFieldValue<DocumentData>) => Promise<void>
 ) => {
   const players: { p1: Player | null; p2: Player | null } = {
     p1: null,
@@ -56,7 +54,11 @@ const CreateGame = (
 
   const findAMatch = async (user: User) => {
     setGameState('finding a match')
-    await setDoc(['games', 'tic-tac-toe', 'queue'], user.displayName as string, { name: user.displayName })
+    const currentUserTimeStamp = Date.now()
+    await setDoc(['games', 'tic-tac-toe', 'queue'], user.displayName as string, {
+      name: user.displayName,
+      timeStamp: currentUserTimeStamp
+    })
 
     const currentUserName = user.displayName as string
     let hasFoundAMatch = false
@@ -64,26 +66,33 @@ const CreateGame = (
     await new Promise<void>((resolve, reject) => {
       unsubscribe = setListenerOnCollection(
         ['games', 'tic-tac-toe', 'queue'],
-        currentUserName,
+        ['name', '!=', currentUserName],
         async snapshot => {
           const usersInQueue = snapshot.docs
           if (usersInQueue.length) {
-            const userWithLongestTimeInQueue = usersInQueue[usersInQueue.length - 1].data() as { name: string }
-            const randomPlayer = Math.ceil(Math.random() * 2) as 1 | 2
-            const randomShape = Math.ceil(Math.random() * 2) === 1 ? 'x' : 'o'
-            players[`p${randomPlayer}` as 'p1' | 'p2'] = {
-              ...userWithLongestTimeInQueue,
-              id: randomPlayer,
-              shape: randomShape
+            console.log(usersInQueue)
+            const userWithLongestTimeInQueue = usersInQueue[usersInQueue.length - 1].data() as {
+              name: string
+              timeStamp: number
             }
-            players[`p${randomPlayer === 1 ? 2 : 1}`] = {
-              name: currentUserName,
-              id: randomPlayer === 1 ? 2 : 1,
-              shape: randomShape === 'x' ? 'o' : 'x'
+            const p1 =
+              userWithLongestTimeInQueue.timeStamp > currentUserTimeStamp ? userWithLongestTimeInQueue.name : currentUserName
+            const p2 =
+              userWithLongestTimeInQueue.timeStamp < currentUserTimeStamp ? userWithLongestTimeInQueue.name : currentUserName
+            players.p1 = {
+              id: 1,
+              name: p1,
+              shape: 'x'
             }
-
+            players.p2 = {
+              id: 2,
+              name: p2,
+              shape: 'o'
+            }
+            console.log(players)
             await setDoc(['games', 'tic-tac-toe', 'matches'], `${players.p1?.name} x ${players.p2?.name}`, {
               players,
+              turn: players.p1,
               board: {
                 // doing this because firestore does not accept nested arrays .................. ok
                 row0: board[0],
@@ -108,7 +117,6 @@ const CreateGame = (
   }
 
   const start = () => {
-    console.log(players)
     setGameState('in progress')
     setResults(undefined, true)
     if (unsubscribe) {
@@ -122,17 +130,36 @@ const CreateGame = (
       snapshot => {
         if (snapshot.exists()) {
           const matchData = snapshot.data() as Match
-          board = [matchData.board.row0, matchData.board.row1, matchData.board.row2]
-          // draw in the canvas the new shape drew by the other player
+          if (!players.p1 || players.p2) {
+            players.p1 = matchData.players.p1
+            players.p2 = matchData.players.p2
+          }
+          if (matchData.markedCell) {
+            const canvasElement = document.querySelector('canvas') as HTMLCanvasElement
+            const { width, height } = canvasElement.getBoundingClientRect()
+            const ctx = canvasElement?.getContext('2d')
+            const cellsCenterCoordinates = canvas.getCellsCenterCoordinates(width, height)
+            if (ctx) {
+              if (matchData.turn.shape === 'o') {
+                canvas.drawX(ctx, cellsCenterCoordinates[matchData.markedCell.row][matchData.markedCell.col], width / 3)
+              } else {
+                canvas.drawO(ctx, cellsCenterCoordinates[matchData.markedCell.row][matchData.markedCell.col], width / 3)
+              }
+            }
+          }
+          if (matchData.results) {
+            results = matchData.results
+            end()
+          } else {
+            board = [matchData.board.row0, matchData.board.row1, matchData.board.row2]
+            setTurn(matchData.turn)
+          }
         }
       },
       err => {
         handleError(err, 'Listening to match changes', undefined, setToast)
       }
     )
-
-    const turn = generateRandomNumberInRange1to2() === 1 ? players.p1 : players.p2
-    return turn
   }
 
   const checkIfCellIsAlreadyMarked = (row: number, col: number) => Boolean(board[row][col])
@@ -144,21 +171,22 @@ const CreateGame = (
         row0: board[0],
         row1: board[1],
         row2: board[2]
-      }
+      },
+      markedCell: {
+        row,
+        col
+      },
+      turn: players[player === 'p1' ? 'p2' : 'p1']
     })
     await checkBoard()
   }
 
   const checkBoard = async () => {
-    let hasGameEnded = false
-
     for (const row of board) {
       if (row.every(col => col === 'x')) {
         await setResults('x')
-        hasGameEnded = true
       } else if (row.every(col => col === 'o')) {
         await setResults('o')
-        hasGameEnded = true
       }
     }
 
@@ -167,10 +195,8 @@ const CreateGame = (
         for (const col in row) {
           if (board[0][col] === 'x' && board[1][col] === 'x' && board[2][col] === 'x') {
             await setResults('x')
-            hasGameEnded = true
           } else if (board[0][col] === 'o' && board[1][col] === 'o' && board[2][col] === 'o') {
             await setResults('o')
-            hasGameEnded = true
           }
         }
       } else break
@@ -178,22 +204,15 @@ const CreateGame = (
 
     if (board[0][0] === 'x' && board[1][1] === 'x' && board[2][2] === 'x') {
       await setResults('x')
-      hasGameEnded = true
     } else if (board[0][0] === 'o' && board[1][1] === 'o' && board[2][2] === 'o') {
       await setResults('o')
-      hasGameEnded = true
     } else if (board[0][2] === 'x' && board[1][1] === 'x' && board[2][0] === 'x') {
       await setResults('x')
-      hasGameEnded = true
     } else if (board[0][2] === 'o' && board[1][1] === 'o' && board[2][0] === 'o') {
       await setResults('o')
-      hasGameEnded = true
     } else if (board.every(row => row.every(col => col === 'x' || col === 'o'))) {
       await setResults()
-      hasGameEnded = true
     }
-
-    if (hasGameEnded) await end()
   }
 
   const setResults = async (winnerShape?: 'x' | 'o', clear?: boolean) => {
@@ -231,11 +250,6 @@ const CreateGame = (
   }
 
   const end = async () => {
-    const doc = await getDoc<Match>(['games', 'tic-tac-toe', 'matches'], `${players.p1?.name} x ${players.p2?.name}`)
-    if (doc.exists()) {
-      const match = doc.data()
-      results = match.results
-    }
     await deleteDoc(['games', 'tic-tac-toe', 'matches'], `${players.p1?.name} x ${players.p2?.name}`)
     setGameState('game ended')
     players.p1 = null
@@ -245,13 +259,15 @@ const CreateGame = (
     })
     setTurn(null)
     // reset canvas to its initial state
-    const canvas = document.querySelector('canvas') as HTMLCanvasElement
-    reset(canvas)
+    const canvasElement = document.querySelector('canvas') as HTMLCanvasElement
+    canvas.reset(canvasElement)
   }
 
   const getP1 = () => players.p1
   const getP2 = () => players.p2
   const getResults = () => results
+
+  const unsubscribeFromListener = () => (unsubscribe ? unsubscribe() : '')
 
   return {
     findAMatch,
@@ -259,6 +275,7 @@ const CreateGame = (
     getP1,
     getP2,
     getResults,
+    unsubscribeFromListener,
     setMovement,
     checkIfCellIsAlreadyMarked
   }
