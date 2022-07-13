@@ -17,6 +17,8 @@ const canvas = CreateCanvas()
 const TicTacToe: React.FC = () => {
   const [gameState, setGameState] = React.useState<GameStates>('pre game')
   const [turn, setTurn] = React.useState<Player | null>(null)
+  const [playTimer, setPlayTimer] = React.useState<number | null>(null)
+  const [timeoutID, setTimeoutID] = React.useState<ReturnType<typeof setTimeout> | null>(null)
   const [canvasDimensions, setCanvasDimensions] = React.useState<CanvasDimensions>({ width: 0, height: 0 })
   const { setToast } = useToast()
   const { user } = useAuth()
@@ -26,6 +28,7 @@ const TicTacToe: React.FC = () => {
       CreateGame(
         setGameState,
         setTurn,
+        setPlayTimer,
         setDoc,
         setListenerOnCollection,
         setListenerOnDoc,
@@ -123,6 +126,32 @@ const TicTacToe: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  React.useEffect(() => {
+    if (!turn) {
+      return
+    }
+
+    setPlayTimer(30)
+    if (timeoutID && playTimer && playTimer < 30) {
+      clearTimeout(timeoutID)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [turn])
+
+  React.useEffect(() => {
+    if (playTimer === 0) {
+      if (user?.displayName === turn?.name) {
+        game.endMatchDueToInactivity(turn?.shape as 'x' | 'o')
+      }
+    } else if (playTimer && playTimer > 0) {
+      const timeout = setTimeout(() => {
+        setPlayTimer(playTimer => playTimer ? playTimer - 1 : null)
+      }, 1000)
+      setTimeoutID(timeout)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playTimer])
+
   return (
     <div className={styles.container}>
       {gameState !== 'in progress' && (
@@ -143,6 +172,22 @@ const TicTacToe: React.FC = () => {
             )}
           </section>
         </ClientOnlyPortal>
+      )}
+      {gameState === 'in progress' && (
+        <div className={styles.match_info_container}>
+          <p>
+            {game.getP1()?.name} <span>{game.getP1()?.shape}</span>
+            <span className={styles.play_timer}>
+              {game.getP1()?.name === turn?.name ? `0:${String(playTimer).padStart(2, '0')}` : ''}
+            </span>
+          </p>
+          <p>
+            {game.getP2()?.name} <span>{game.getP2()?.shape}</span>
+            <span className={styles.play_timer}>
+              {game.getP2()?.name === turn?.name ? `0:${String(playTimer).padStart(2, '0')}` : ''}
+            </span>
+          </p>
+        </div>
       )}
       <canvas
         style={{ cursor: turn?.name === user?.displayName ? 'pointer' : 'not-allowed' }}
