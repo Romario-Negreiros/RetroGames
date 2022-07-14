@@ -18,6 +18,7 @@ const TicTacToe: React.FC = () => {
   const [gameState, setGameState] = React.useState<GameStates>('pre game')
   const [turn, setTurn] = React.useState<Player | null>(null)
   const [playTimer, setPlayTimer] = React.useState<number | null>(null)
+  const [isCancelable, setIsCancelable] = React.useState(true)
   const [timeoutID, setTimeoutID] = React.useState<ReturnType<typeof setTimeout> | null>(null)
   const [canvasDimensions, setCanvasDimensions] = React.useState<CanvasDimensions>({ width: 0, height: 0 })
   const { setToast } = useToast()
@@ -29,6 +30,7 @@ const TicTacToe: React.FC = () => {
         setGameState,
         setTurn,
         setPlayTimer,
+        setIsCancelable,
         setDoc,
         setListenerOnCollection,
         setListenerOnDoc,
@@ -83,19 +85,24 @@ const TicTacToe: React.FC = () => {
   }, 500)
 
   const handleClickOnFindAMatchButton = async () => {
-    try {
-      await game.findAMatch(user as User)
-      game.start()
-    } catch (err) {
-      handleError(err, 'Finding a tic tac toe match', undefined, setToast)
-      setGameState('pre game')
+    if (gameState === 'pre game') {
+      try {
+        await game.findAMatch(user as User)
+        game.start()
+      } catch (err) {
+        handleError(err, 'Finding a tic tac toe match', undefined, setToast)
+        setGameState('pre game')
+      }
     }
   }
 
   const handleClickOnCancelButton = async () => {
-    await deleteDoc(['games', 'tic-tac-toe', 'queue'], user?.displayName as string)
-    game.unsubscribeFromListener()
-    setGameState('pre game')
+    if (isCancelable) {
+      await deleteDoc(['games', 'tic-tac-toe', 'queue'], user?.displayName as string)
+      game.reset()
+      game.unsubscribeFromListener()
+      setGameState('pre game')
+    }
   }
 
   React.useEffect(() => {
@@ -138,7 +145,7 @@ const TicTacToe: React.FC = () => {
       }
     } else if (playTimer && playTimer > 0) {
       const timeout = setTimeout(() => {
-        setPlayTimer(playTimer => playTimer ? playTimer - 1 : null)
+        setPlayTimer(playTimer => (playTimer ? playTimer - 1 : null))
       }, 1000)
       setTimeoutID(timeout)
     }
@@ -155,11 +162,15 @@ const TicTacToe: React.FC = () => {
               {gameState === 'finding a match' && <Waiting waitingFor="Finding an opponent..." />}
               {gameState === 'game ended' && <p className={styles.game_results}>{game.getResults().message}</p>}
             </div>
-            <button className="button" onClick={handleClickOnFindAMatchButton}>
+            <button
+              className="button"
+              disabled={gameState === 'finding a match'}
+              onClick={handleClickOnFindAMatchButton}
+            >
               Find a match
             </button>
             {gameState === 'finding a match' && (
-              <button className="button" onClick={handleClickOnCancelButton}>
+              <button className="button" disabled={!isCancelable} onClick={handleClickOnCancelButton}>
                 Cancel
               </button>
             )}
