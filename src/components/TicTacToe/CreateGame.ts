@@ -75,6 +75,9 @@ const CreateGame = (
               name: string
               timeStamp: number
             }
+
+            // refactor this shit
+
             const p1 =
               userWithLongestTimeInQueue.timeStamp > currentUserTimeStamp ? userWithLongestTimeInQueue.name : currentUserName
             const p2 =
@@ -82,12 +85,12 @@ const CreateGame = (
             players.p1 = {
               id: 1,
               name: p1,
-              shape: 'x'
+              shape: 'X'
             }
             players.p2 = {
               id: 2,
               name: p2,
-              shape: 'o'
+              shape: 'O'
             }
             await setDoc(['games', 'tic-tac-toe', 'matches'], `${players.p1?.name} x ${players.p2?.name}`, {
               players,
@@ -139,7 +142,7 @@ const CreateGame = (
             const ctx = canvasElement?.getContext('2d')
             const cellsCenterCoordinates = canvas.getCellsCenterCoordinates(width, height)
             if (ctx) {
-              if (matchData.turn.shape === 'o') {
+              if (matchData.turn.shape === 'O') {
                 canvas.drawX(ctx, cellsCenterCoordinates[matchData.markedCell.row][matchData.markedCell.col], width / 3)
               } else {
                 canvas.drawO(ctx, cellsCenterCoordinates[matchData.markedCell.row][matchData.markedCell.col], width / 3)
@@ -163,8 +166,8 @@ const CreateGame = (
 
   const checkIfCellIsAlreadyMarked = (row: number, col: number) => Boolean(board[row][col])
 
-  const endMatchDueToInactivity = (inactivePlayerShape: 'x' | 'o') => {
-    setResults(inactivePlayerShape === 'x' ? 'o' : 'x', false, true)
+  const endMatchDueToInactivity = (inactivePlayerShape: 'X' | 'O') => {
+    setResults(inactivePlayerShape === 'X' ? 'O' : 'X', false, true)
   }
 
   const setMovement = async (row: number, col: number, player: 'p1' | 'p2') => {
@@ -186,39 +189,39 @@ const CreateGame = (
 
   const checkBoard = async () => {
     for (const row of board) {
-      if (row.every(col => col === 'x')) {
-        await setResults('x')
-      } else if (row.every(col => col === 'o')) {
-        await setResults('o')
+      if (row.every(col => col === 'X')) {
+        await setResults('X')
+      } else if (row.every(col => col === 'O')) {
+        await setResults('O')
       }
     }
 
     for (const row of board) {
       if (board.indexOf(row) === 0) {
         for (const col in row) {
-          if (board[0][col] === 'x' && board[1][col] === 'x' && board[2][col] === 'x') {
-            await setResults('x')
-          } else if (board[0][col] === 'o' && board[1][col] === 'o' && board[2][col] === 'o') {
-            await setResults('o')
+          if (board[0][col] === 'X' && board[1][col] === 'X' && board[2][col] === 'X') {
+            await setResults('X')
+          } else if (board[0][col] === 'O' && board[1][col] === 'O' && board[2][col] === 'O') {
+            await setResults('O')
           }
         }
       } else break
     }
 
-    if (board[0][0] === 'x' && board[1][1] === 'x' && board[2][2] === 'x') {
-      await setResults('x')
-    } else if (board[0][0] === 'o' && board[1][1] === 'o' && board[2][2] === 'o') {
-      await setResults('o')
-    } else if (board[0][2] === 'x' && board[1][1] === 'x' && board[2][0] === 'x') {
-      await setResults('x')
-    } else if (board[0][2] === 'o' && board[1][1] === 'o' && board[2][0] === 'o') {
-      await setResults('o')
-    } else if (board.every(row => row.every(col => col === 'x' || col === 'o'))) {
+    if (board[0][0] === 'X' && board[1][1] === 'X' && board[2][2] === 'X') {
+      await setResults('X')
+    } else if (board[0][0] === 'O' && board[1][1] === 'O' && board[2][2] === 'O') {
+      await setResults('O')
+    } else if (board[0][2] === 'X' && board[1][1] === 'X' && board[2][0] === 'X') {
+      await setResults('X')
+    } else if (board[0][2] === 'O' && board[1][1] === 'O' && board[2][0] === 'O') {
+      await setResults('O')
+    } else if (board.every(row => row.every(col => col === 'X' || col === 'O'))) {
       await setResults()
     }
   }
 
-  const setResults = async (winnerShape?: 'x' | 'o', clear?: boolean, inactivtyWin?: boolean) => {
+  const setResults = async (winnerShape?: 'X' | 'O', clear?: boolean, inactivtyWin?: boolean) => {
     if (clear) {
       results = {
         winner: null,

@@ -13,7 +13,7 @@ export type GameStates = 'pre game' | 'finding a match' | 'in progress' | 'game 
 export interface Player {
   id: 1 | 2
   name: string
-  shape: 'x' | 'o'
+  shape: 'X' | 'O'
 }
 
 export interface Results {
@@ -22,7 +22,7 @@ export interface Results {
   message: string
 }
 
-type Row = Array<'x' | 'o'>
+type Row = Array<'X' | 'O'>
 
 export interface Match {
   players: {
