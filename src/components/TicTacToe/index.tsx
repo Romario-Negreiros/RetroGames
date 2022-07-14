@@ -61,16 +61,9 @@ const TicTacToe: React.FC = () => {
           return
         }
 
-        if (turn?.shape === 'x') {
-          canvas.drawX(ctx, coordinates, canvasDimensions.width / 3)
-        } else {
-          canvas.drawO(ctx, coordinates, canvasDimensions.width / 3)
-        }
-
-        if (turn?.id === 1) {
-          await game.setMovement(row, col, 'p1')
-        } else {
-          await game.setMovement(row, col, 'p2')
+        if (turn) {
+          canvas[`draw${turn?.shape}`](ctx, coordinates, canvasDimensions.width / 3)
+          await game.setMovement(row, col, `p${turn.id}`)
         }
       }
     }
@@ -141,7 +134,7 @@ const TicTacToe: React.FC = () => {
   React.useEffect(() => {
     if (playTimer === 0) {
       if (user?.displayName === turn?.name) {
-        game.endMatchDueToInactivity(turn?.shape as 'x' | 'o')
+        game.endMatchDueToInactivity(turn?.shape as 'X' | 'O')
       }
     } else if (playTimer && playTimer > 0) {
       const timeout = setTimeout(() => {
