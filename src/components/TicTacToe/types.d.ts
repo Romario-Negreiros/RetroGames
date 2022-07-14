@@ -16,19 +16,21 @@ export interface Player {
   shape: 'X' | 'O'
 }
 
+export interface Players {
+  p1: Player
+  p2: Player
+}
+
 export interface Results {
   winner: Player | null
   loser: Player | null
   message: string
 }
 
-type Row = Array<'X' | 'O'>
+type Row = Array<'X' | 'O' | ''>
 
 export interface Match {
-  players: {
-    p1: Player
-    p2: Player
-  }
+  players: Players
   turn: Player
   board: {
     row0: Row

@@ -9,7 +9,7 @@ import type {
   Unsubscribe,
   WithFieldValue
 } from 'firebase/firestore'
-import type { GameStates, Match, Player, Results } from './types'
+import type { GameStates, Match, Player, Results, Players } from './types'
 import type { User } from '@contexts/authContext'
 import type { IToast } from '@contexts/toastContext'
 import type { WhereArgs } from '@utils/hooks/useFirestore'
@@ -38,10 +38,7 @@ const CreateGame = (
   deleteDoc: (pathSegments: string[], docId: string) => Promise<void>,
   updateDoc: (pathSegments: string[], docId: string, data: WithFieldValue<DocumentData>) => Promise<void>
 ) => {
-  const players: { p1: Player | null; p2: Player | null } = {
-    p1: null,
-    p2: null
-  }
+  let players: Players | null = null
   let results: Results = {
     winner: null,
     loser: null,
@@ -78,21 +75,21 @@ const CreateGame = (
               timeStamp: number
             }
 
-            // refactor this shit
-
             const p1 =
               userWithLongestTimeInQueue.timeStamp > currentUserTimeStamp ? userWithLongestTimeInQueue.name : currentUserName
             const p2 =
               userWithLongestTimeInQueue.timeStamp < currentUserTimeStamp ? userWithLongestTimeInQueue.name : currentUserName
-            players.p1 = {
-              id: 1,
-              name: p1,
-              shape: 'X'
-            }
-            players.p2 = {
-              id: 2,
-              name: p2,
-              shape: 'O'
+            players = {
+              p1: {
+                id: 1,
+                name: p1,
+                shape: 'X'
+              },
+              p2: {
+                id: 2,
+                name: p2,
+                shape: 'O'
+              }
             }
             await setDoc(['games', 'tic-tac-toe', 'matches'], `${players.p1?.name} x ${players.p2?.name}`, {
               players,
@@ -120,7 +117,7 @@ const CreateGame = (
     }
   }
 
-  const start = () => {
+  const start = (user: User) => {
     setGameState('in progress')
     setResults(undefined, true)
     if (unsubscribe) {
@@ -130,25 +127,21 @@ const CreateGame = (
 
     unsubscribe = setListenerOnDoc(
       ['games', 'tic-tac-toe', 'matches'],
-      `${players.p1?.name} x ${players.p2?.name}`,
+      `${players?.p1.name} x ${players?.p2?.name}`,
       snapshot => {
         if (snapshot.exists()) {
           const matchData = snapshot.data() as Match
-          if (!players.p1 || players.p2) {
-            players.p1 = matchData.players.p1
-            players.p2 = matchData.players.p2
-          }
           if (matchData.markedCell) {
             const canvasElement = document.querySelector('canvas') as HTMLCanvasElement
             const { width, height } = canvasElement.getBoundingClientRect()
             const ctx = canvasElement?.getContext('2d')
             const cellsCenterCoordinates = canvas.getCellsCenterCoordinates(width, height)
-            if (ctx) {
-              if (matchData.turn.shape === 'O') {
-                canvas.drawX(ctx, cellsCenterCoordinates[matchData.markedCell.row][matchData.markedCell.col], width / 3)
-              } else {
-                canvas.drawO(ctx, cellsCenterCoordinates[matchData.markedCell.row][matchData.markedCell.col], width / 3)
-              }
+            if (ctx && matchData.turn.name === user.displayName) {
+              canvas[`draw${matchData.turn.shape === 'X' ? 'O' : 'X'}`](
+                ctx,
+                cellsCenterCoordinates[matchData.markedCell.row][matchData.markedCell.col],
+                width / 3
+              )
             }
           }
           if (matchData.results) {
@@ -173,20 +166,22 @@ const CreateGame = (
   }
 
   const setMovement = async (row: number, col: number, player: 'p1' | 'p2') => {
-    board[row][col] = players[player]?.shape as string
-    await updateDoc(['games', 'tic-tac-toe', 'matches'], `${players.p1?.name} x ${players.p2?.name}`, {
-      board: {
-        row0: board[0],
-        row1: board[1],
-        row2: board[2]
-      },
-      markedCell: {
-        row,
-        col
-      },
-      turn: players[player === 'p1' ? 'p2' : 'p1']
-    })
-    await checkBoard()
+    if (players) {
+      board[row][col] = players[player].shape as string
+      await updateDoc(['games', 'tic-tac-toe', 'matches'], `${players?.p1.name} x ${players?.p2.name}`, {
+        board: {
+          row0: board[0],
+          row1: board[1],
+          row2: board[2]
+        },
+        markedCell: {
+          row,
+          col
+        },
+        turn: players[player === 'p1' ? 'p2' : 'p1']
+      })
+      await checkBoard()
+    }
   }
 
   const checkBoard = async () => {
@@ -233,7 +228,7 @@ const CreateGame = (
       return
     }
     if (!winnerShape) {
-      await updateDoc(['games', 'tic-tac-toe', 'matches'], `${players.p1?.name} x ${players.p2?.name}`, {
+      await updateDoc(['games', 'tic-tac-toe', 'matches'], `${players?.p1.name} x ${players?.p2.name}`, {
         results: {
           winner: null,
           loser: null,
@@ -243,40 +238,39 @@ const CreateGame = (
       return
     }
 
-    await updateDoc(['games', 'tic-tac-toe', 'matches'], `${players.p1?.name} x ${players.p2?.name}`, {
+    await updateDoc(['games', 'tic-tac-toe', 'matches'], `${players?.p1.name} x ${players?.p2.name}`, {
       results:
-        players.p1?.shape === winnerShape ? {
-          winner: players.p1,
-          loser: players.p2,
+        players?.p1.shape === winnerShape ? {
+          winner: players?.p1,
+          loser: players?.p2,
           message: `${players.p1.name} is the winner ${
                 inactivtyWin ? `due to ${players.p2?.name}'s inactivity` : ''
               }!`
         } : {
-          winner: players.p2,
-          loser: players.p1,
-          message: `${players.p2?.name} is the winner ${
-                inactivtyWin ? `due to ${players.p1?.name}'s inactivity` : ''
+          winner: players?.p2,
+          loser: players?.p1,
+          message: `${players?.p2?.name} is the winner ${
+                inactivtyWin ? `due to ${players?.p1.name}'s inactivity` : ''
               }!`
         }
     })
   }
 
   const end = async () => {
-    await deleteDoc(['games', 'tic-tac-toe', 'matches'], `${players.p1?.name} x ${players.p2?.name}`)
+    await deleteDoc(['games', 'tic-tac-toe', 'matches'], `${players?.p1.name} x ${players?.p2.name}`)
     setGameState('game ended')
 
     reset()
   }
 
-  const getP1 = () => players.p1
-  const getP2 = () => players.p2
+  const getP1 = () => players?.p1
+  const getP2 = () => players?.p2
   const getResults = () => results
 
   const unsubscribeFromListener = () => (unsubscribe ? unsubscribe() : '')
 
   const reset = () => {
-    players.p1 = null
-    players.p2 = null
+    players = null
 
     board = board.map(row => {
       return row.map(() => '')

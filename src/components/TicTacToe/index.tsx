@@ -88,7 +88,7 @@ const TicTacToe: React.FC = () => {
     if (gameState === 'pre game') {
       try {
         await game.findAMatch(user as User)
-        game.start()
+        game.start(user as User)
       } catch (err) {
         handleError(err, 'Finding a tic tac toe match', undefined, setToast)
         setGameState('pre game')
