@@ -20,6 +20,7 @@ const CreateGame = (
   setGameState: (gameState: GameStates) => void,
   setTurn: (turn: Player | null) => void,
   setPlayTimer: (playTimer: number | null) => void,
+  setIsCancelable: (isCancelable: boolean) => void,
   setDoc: (pathSegments: string[], docId: string, data: WithFieldValue<DocumentData>) => Promise<void>,
   setListenerOnCollection: (
     pathSegments: string[],
@@ -71,6 +72,7 @@ const CreateGame = (
         async snapshot => {
           const usersInQueue = snapshot.docs
           if (usersInQueue.length) {
+            setIsCancelable(false)
             const userWithLongestTimeInQueue = usersInQueue[usersInQueue.length - 1].data() as {
               name: string
               timeStamp: number
@@ -246,11 +248,15 @@ const CreateGame = (
         players.p1?.shape === winnerShape ? {
           winner: players.p1,
           loser: players.p2,
-          message: `${players.p1.name} is the winner ${inactivtyWin ? `due to ${players.p2?.name}'s inactivity` : ''}!`
+          message: `${players.p1.name} is the winner ${
+                inactivtyWin ? `due to ${players.p2?.name}'s inactivity` : ''
+              }!`
         } : {
           winner: players.p2,
           loser: players.p1,
-          message: `${players.p2?.name} is the winner ${inactivtyWin ? `due to ${players.p1?.name}'s inactivity` : ''}!`
+          message: `${players.p2?.name} is the winner ${
+                inactivtyWin ? `due to ${players.p1?.name}'s inactivity` : ''
+              }!`
         }
     })
   }
@@ -258,16 +264,8 @@ const CreateGame = (
   const end = async () => {
     await deleteDoc(['games', 'tic-tac-toe', 'matches'], `${players.p1?.name} x ${players.p2?.name}`)
     setGameState('game ended')
-    players.p1 = null
-    players.p2 = null
-    board = board.map(row => {
-      return row.map(() => '')
-    })
-    setTurn(null)
-    setPlayTimer(null)
-    // reset canvas to its initial state
-    const canvasElement = document.querySelector('canvas') as HTMLCanvasElement
-    canvas.reset(canvasElement)
+
+    reset()
   }
 
   const getP1 = () => players.p1
@@ -275,6 +273,23 @@ const CreateGame = (
   const getResults = () => results
 
   const unsubscribeFromListener = () => (unsubscribe ? unsubscribe() : '')
+
+  const reset = () => {
+    players.p1 = null
+    players.p2 = null
+
+    board = board.map(row => {
+      return row.map(() => '')
+    })
+
+    setTurn(null)
+    setPlayTimer(null)
+    setIsCancelable(true)
+
+    // reset canvas to its initial state
+    const canvasElement = document.querySelector('canvas') as HTMLCanvasElement
+    canvas.reset(canvasElement)
+  }
 
   return {
     findAMatch,
@@ -285,7 +300,8 @@ const CreateGame = (
     unsubscribeFromListener,
     setMovement,
     endMatchDueToInactivity,
-    checkIfCellIsAlreadyMarked
+    checkIfCellIsAlreadyMarked,
+    reset
   }
 }
 
