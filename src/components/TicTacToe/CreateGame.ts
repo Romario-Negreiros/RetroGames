@@ -267,7 +267,7 @@ const CreateGame = (
   const getP2 = () => players?.p2
   const getResults = () => results
 
-  const unsubscribeFromListener = () => (unsubscribe ? unsubscribe() : '')
+  const unsubscribeFromListener = () => unsubscribe && unsubscribe()
 
   const reset = () => {
     players = null
