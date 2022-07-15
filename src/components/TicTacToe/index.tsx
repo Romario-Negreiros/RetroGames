@@ -127,6 +127,34 @@ const TicTacToe: React.FC = () => {
   }, [])
 
   React.useEffect(() => {
+    return () => {
+      if (timeoutID) {
+        clearTimeout(timeoutID)
+      }
+      if (gameState === 'finding a match') {
+        deleteDoc(['games', 'tic-tac-toe', 'queue'], user?.displayName as string)
+      } else if (gameState === 'in progress') {
+        const p1 = game.getP1()
+        const p2 = game.getP2()
+        if (p1 && p2) {
+          const winner = p1.name === user?.displayName ? p2 : p1
+          const loser = p1.name === user?.displayName ? p1 : p2
+          ;(async () => {
+            await updateDoc(['games', 'tic-tac-toe', 'matches'], `${p1.name} x ${p2.name}`, {
+              results: {
+                winner,
+                loser,
+                message: `${winner.name} is the winner because ${loser.name} left the match!`
+              }
+            })
+            await deleteDoc(['games', 'tic-tac-toe', 'matches'], `${game.getP1()?.name} x ${game.getP2()?.name}`)
+          })()
+        }
+      }
+    }
+  }, [deleteDoc, game, gameState, timeoutID, updateDoc, user?.displayName])
+
+  React.useEffect(() => {
     if (!turn) {
       return
     }
