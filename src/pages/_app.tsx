@@ -1,6 +1,7 @@
 import React from 'react'
 import firebase from '../libs/firebase'
 import { handleError } from '@utils/handlers'
+import { useFirestore } from '@utils/hooks'
 
 import { Layout, Toast } from '../components'
 
@@ -20,11 +21,17 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     message: '',
     timeToCloseInMs: 0
   })
-
+  const { getDoc } = useFirestore()
   React.useEffect(() => {
     const unsubscribe = firebase.auth.instance.onAuthStateChanged(
-      user => {
-        setUser(user)
+      async user => {
+        if (user?.displayName) {
+          const doc = await getDoc<Pick<User, 'ticTacToe'>>(['users'], user.displayName)
+          if (doc.exists()) {
+            const userData = doc.data()
+            setUser({ ...user, ...userData })
+          }
+        }
       },
       error => {
         handleError(error, 'Auth state listener', undefined, setToast)
