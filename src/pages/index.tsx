@@ -1,6 +1,6 @@
 import React from 'react'
 import firebase from '../libs/firebase'
-import { useToast, useAuthMethods, useFirestore } from '@utils/hooks'
+import { useToast, useAuthMethods, useFirestore, useAuth } from '@utils/hooks'
 import { handleError } from '@utils/handlers'
 
 import games from '@static/games.json'
@@ -11,10 +11,19 @@ import styles from '@styles/pages/home.module.css'
 
 import type { NextPage } from 'next'
 
+const ticTacToe = {
+  score: 0,
+  wins: 0,
+  losses: 0,
+  currentWinStreak: 0,
+  maxWinStreak: 0
+}
+
 const Home: NextPage = () => {
   const { setToast } = useToast()
   const { finishSignInWithEmailLink, updateProfile } = useAuthMethods()
   const { setDoc } = useFirestore()
+  const { setUser } = useAuth()
 
   React.useEffect(() => {
     const { auth } = firebase
@@ -26,7 +35,10 @@ const Home: NextPage = () => {
           const user = await finishSignInWithEmailLink()
           if (name) {
             await updateProfile(user, { displayName: name })
-            await setDoc(['users'], name, {})
+            await setDoc(['users'], name, {
+              ticTacToe
+            })
+            setUser({ ...user, ticTacToe })
           }
         } catch (err) {
           handleError(err, 'Complete log in or account creation with email link', undefined, setToast)
