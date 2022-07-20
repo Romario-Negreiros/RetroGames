@@ -11,6 +11,7 @@ const users = [
     score: 2323565,
     wins: 123,
     losses: 21,
+    currentWinStreak: 19,
     maxWinStreak: 74
   },
   {
@@ -19,6 +20,7 @@ const users = [
     score: 2323565,
     wins: 123,
     losses: 21,
+    currentWinStreak: 19,
     maxWinStreak: 74
   },
   {
@@ -27,6 +29,7 @@ const users = [
     score: 2323565,
     wins: 123,
     losses: 21,
+    currentWinStreak: 19,
     maxWinStreak: 74
   },
   {
@@ -35,6 +38,7 @@ const users = [
     score: 2323565,
     wins: 123,
     losses: 21,
+    currentWinStreak: 19,
     maxWinStreak: 74
   },
   {
@@ -43,6 +47,7 @@ const users = [
     score: 2323565,
     wins: 123,
     losses: 21,
+    currentWinStreak: 19,
     maxWinStreak: 74
   },
   {
@@ -51,6 +56,7 @@ const users = [
     score: 2323565,
     wins: 123,
     losses: 21,
+    currentWinStreak: 19,
     maxWinStreak: 74
   },
   {
@@ -59,6 +65,7 @@ const users = [
     score: 2323565,
     wins: 123,
     losses: 21,
+    currentWinStreak: 19,
     maxWinStreak: 74
   },
   {
@@ -67,6 +74,7 @@ const users = [
     score: 2323565,
     wins: 123,
     losses: 21,
+    currentWinStreak: 19,
     maxWinStreak: 74
   },
   {
@@ -75,6 +83,7 @@ const users = [
     score: 2323565,
     wins: 123,
     losses: 21,
+    currentWinStreak: 19,
     maxWinStreak: 74
   },
   {
@@ -83,6 +92,7 @@ const users = [
     score: 2323565,
     wins: 123,
     losses: 21,
+    currentWinStreak: 19,
     maxWinStreak: 74
   }
 ]
@@ -96,6 +106,7 @@ const Leaderboard: NextPage = () => {
             Leaderboard <br /> GameName
           </h1>
           <p>MWS = Max Win Streak</p>
+          <p>CWS = Current Win Streak </p>
         </div>
         <div className={styles.input_container}>
           <input type="search" placeholder="Search player..." className="input" />
@@ -110,6 +121,7 @@ const Leaderboard: NextPage = () => {
               <th>Score</th>
               <th>Wins</th>
               <th>Losses</th>
+              <th>CWS</th>
               <th>MWS</th>
             </tr>
           </thead>
@@ -124,6 +136,7 @@ const Leaderboard: NextPage = () => {
               <td>2456</td>
               <td>14</td>
               <td>5</td>
+              <td>0</td>
               <td>2</td>
             </tr>
             {users.map(data => (
@@ -137,6 +150,7 @@ const Leaderboard: NextPage = () => {
                 <td>{data.score}</td>
                 <td>{data.wins}</td>
                 <td>{data.losses}</td>
+                <td>{data.currentWinStreak}</td>
                 <td>{data.maxWinStreak}</td>
               </tr>
             ))}
