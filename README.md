@@ -38,8 +38,8 @@ Soon...
  - [x] Sign In
  - [x] Sign Up
 - [ ] Games
- - [ ] Tic Tac Toe
- - [ ] Space Shooter
+ - [x] Tic Tac Toe
+ - [ ] Soon...
 - [ ] Leaderboards
 - [ ] Players profiles
 
