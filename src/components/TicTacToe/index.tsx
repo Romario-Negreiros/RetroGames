@@ -123,14 +123,9 @@ const TicTacToe: React.FC = () => {
     return () => {
       window.removeEventListener('resize', handleWindowResize)
       game.unsubscribeFromListener()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  React.useEffect(() => {
-    return () => {
       isUnmounting.current = true
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   React.useEffect(() => {
