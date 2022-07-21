@@ -25,12 +25,14 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   React.useEffect(() => {
     const unsubscribe = firebase.auth.instance.onAuthStateChanged(
       async user => {
-        if (user?.displayName) {
+        if (user && user.displayName) {
           const doc = await getDoc<Pick<User, 'ticTacToe'>>(['users'], user.displayName)
           if (doc.exists()) {
             const userData = doc.data()
             setUser({ ...user, ...userData })
           }
+        } else {
+          setUser(null)
         }
       },
       error => {
