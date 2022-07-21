@@ -24,6 +24,7 @@ const TicTacToe: React.FC = () => {
   const { setToast } = useToast()
   const { user } = useAuth()
   const { deleteDoc, setDoc, setListenerOnCollection, setListenerOnDoc, updateDoc } = useFirestore()
+  const isUnmounting = React.useRef(false)
   const game = React.useMemo(
     () =>
       CreateGame(
@@ -85,7 +86,7 @@ const TicTacToe: React.FC = () => {
   }, 500)
 
   const handleClickOnFindAMatchButton = async () => {
-    if (gameState === 'pre game') {
+    if (gameState === 'pre game' || gameState === 'game ended') {
       try {
         await game.findAMatch(user as User)
         game.start(user as User)
@@ -128,31 +129,49 @@ const TicTacToe: React.FC = () => {
 
   React.useEffect(() => {
     return () => {
-      if (timeoutID) {
-        clearTimeout(timeoutID)
-      }
-      if (gameState === 'finding a match') {
-        deleteDoc(['games', 'tic-tac-toe', 'queue'], user?.displayName as string)
-      } else if (gameState === 'in progress') {
-        const p1 = game.getP1()
-        const p2 = game.getP2()
-        if (p1 && p2) {
-          const winner = p1.name === user?.displayName ? p2 : p1
-          const loser = p1.name === user?.displayName ? p1 : p2
-          ;(async () => {
-            await updateDoc(['games', 'tic-tac-toe', 'matches'], `${p1.name} x ${p2.name}`, {
-              results: {
-                winner,
-                loser,
-                message: `${winner.name} is the winner because ${loser.name} left the match!`
-              }
-            })
-            await deleteDoc(['games', 'tic-tac-toe', 'matches'], `${game.getP1()?.name} x ${game.getP2()?.name}`)
-          })()
+      isUnmounting.current = true
+    }
+  }, [])
+
+  React.useEffect(() => {
+    return () => {
+      if (isUnmounting.current) {
+        if (timeoutID) {
+          clearTimeout(timeoutID)
+        }
+        if (gameState === 'finding a match') {
+          deleteDoc(['games', 'tic-tac-toe', 'queue'], user?.displayName as string)
+        } else if (gameState === 'in progress') {
+          const p1 = game.getP1()
+          const p2 = game.getP2()
+          if (p1 && p2) {
+            const winner = p1.name === user?.displayName ? p2 : p1
+            const loser = p1.name === user?.displayName ? p1 : p2
+            ;(async () => {
+              await updateDoc(['games', 'tic-tac-toe', 'matches'], `${p1.name} x ${p2.name}`, {
+                results: {
+                  winner,
+                  loser,
+                  message: `${winner.name} is the winner because ${loser.name} left the match!`
+                }
+              })
+              await deleteDoc(['games', 'tic-tac-toe', 'matches'], `${game.getP1()?.name} x ${game.getP2()?.name}`)
+              await updateDoc(['users'], user?.displayName as string, {
+                ticTacToe: {
+                  score: user?.ticTacToe.score as number - 15,
+                  wins: user?.ticTacToe.wins,
+                  losses: user?.ticTacToe.losses as number + 1,
+                  currentWinStreak: 0,
+                  maxWinStreak: user?.ticTacToe.maxWinStreak
+                }
+              })
+            })()
+          }
         }
       }
     }
-  }, [deleteDoc, game, gameState, timeoutID, updateDoc, user?.displayName])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timeoutID, gameState])
 
   React.useEffect(() => {
     if (!turn) {
