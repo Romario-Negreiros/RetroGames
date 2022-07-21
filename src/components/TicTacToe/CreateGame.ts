@@ -128,7 +128,7 @@ const CreateGame = (
     unsubscribe = setListenerOnDoc(
       ['games', 'tic-tac-toe', 'matches'],
       `${players?.p1.name} x ${players?.p2?.name}`,
-      snapshot => {
+      async snapshot => {
         if (snapshot.exists()) {
           const matchData = snapshot.data() as Match
           if (matchData.markedCell) {
@@ -146,7 +146,7 @@ const CreateGame = (
           }
           if (matchData.results) {
             results = matchData.results
-            end()
+            end(user)
           } else {
             board = [matchData.board.row0, matchData.board.row1, matchData.board.row2]
             setTurn(matchData.turn)
@@ -256,11 +256,32 @@ const CreateGame = (
     })
   }
 
-  const end = async () => {
-    await deleteDoc(['games', 'tic-tac-toe', 'matches'], `${players?.p1.name} x ${players?.p2.name}`)
-    setGameState('game ended')
+  const end = async (user: User) => {
+    try {
+      await deleteDoc(['games', 'tic-tac-toe', 'matches'], `${players?.p1.name} x ${players?.p2.name}`)
+      await updateUserGameStats(user)
+    } catch (err) {
+      handleError(err, 'Updating user game stats', undefined, setToast)
+    } finally {
+      setGameState('game ended')
+      reset()
+    }
+  }
 
-    reset()
+  const updateUserGameStats = async (user: User) => {
+    if (results.winner) {
+      const isWinner = results.winner.name === user.displayName
+      await updateDoc(['users'], user.displayName as string, {
+        ticTacToe: {
+          score: isWinner ? user.ticTacToe.score + 30 : user.ticTacToe.score - 15,
+          wins: isWinner ? user.ticTacToe.wins + 1 : user.ticTacToe.wins,
+          losses: isWinner ? user.ticTacToe.losses : user.ticTacToe.losses + 1,
+          currentWinStreak: isWinner ? user.ticTacToe.currentWinStreak + 1 : 0,
+          maxWinStreak:
+            isWinner && user.ticTacToe.currentWinStreak + 1 > user.ticTacToe.maxWinStreak ? user.ticTacToe.currentWinStreak + 1 : user.ticTacToe.maxWinStreak
+        }
+      })
+    }
   }
 
   const getP1 = () => players?.p1
