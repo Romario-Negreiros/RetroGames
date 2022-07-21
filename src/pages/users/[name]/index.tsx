@@ -1,46 +1,76 @@
+import React from 'react'
+import { useFirestore } from '@utils/hooks'
+
+import { Error } from '../../../components'
+
 import styles from '@styles/pages/userProfile.module.css'
 
-import type { NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
+import type { User } from '@contexts/authContext'
 
-const user = {
-  name: 'bananana',
-  ticTacToe: {
-    position: 1,
-    score: 24567,
-    wins: 47,
-    losses: 5,
-    maxWinStreak: 12
-  },
-  spaceShooter: {
-    position: 2,
-    score: 12345,
-    wins: 88,
-    losses: 4,
-    maxWinStreak: 19
+type Games = 'ticTacToe'
+
+const games: Games[] = ['ticTacToe']
+
+const gamesNamesForTitle = {
+  ticTacToe: 'Tic Tac Toe'
+}
+
+interface Props {
+  user: {
+    name: string
+  } & Pick<User, 'ticTacToe'>
+  serverSideError?: string
+}
+
+export const getServerSideProps: GetServerSideProps = async context => {
+  const name = context.params?.name as string | null
+
+  if (!name) {
+    return {
+      props: {
+        serverSideError: 'Name parameter not found!'
+      }
+    }
+  }
+
+  const firestoreFunctions = useFirestore
+  const { getDoc } = firestoreFunctions()
+
+  const doc = await getDoc<Pick<User, 'ticTacToe'>>(['users'], name)
+  if (!doc.exists()) {
+    return {
+      props: {
+        serverSideError: 'User not found!'
+      }
+    }
+  }
+
+  const user = doc.data()
+  return {
+    props: {
+      user: { name, ...user }
+    }
   }
 }
 
-type Games = 'ticTacToe' | 'spaceShooter'
+const UserProfile: NextPage<Props> = ({ user, serverSideError }) => {
+  const [error, setError] = React.useState(serverSideError)
 
-const games: Games[] = ['ticTacToe', 'spaceShooter']
-
-const gamesNamesForTitle = {
-  ticTacToe: 'Tic Tac Toe',
-  spaceShooter: 'Space Shooter'
-}
-
-const UserProfile: NextPage = () => {
+  if (error) {
+    return (
+      <main className="main_container full_screen_height_wrapper">
+        <Error error={error} setError={serverSideError ? undefined : setError} />
+      </main>
+    )
+  }
   return (
     <main className={`main_container ${styles.container}`}>
-      <h1>Nome do otário</h1>
+      <h1>{user.name}</h1>
       {games.map(game => (
         <ul key={game} className={styles.game_info}>
           <li className={styles.game_title}>
             <h2>{gamesNamesForTitle[game]}</h2>
-          </li>
-          <li>
-            <span>Leaderboard position: </span>
-            {user[game].position}
           </li>
           <li>
             <span>Score: </span>
