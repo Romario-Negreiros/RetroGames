@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { TicTacToe, SpaceShooter } from '../../../components'
+import { TicTacToe } from '../../../components'
 
 import styles from '@styles/pages/game.module.css'
 
@@ -9,7 +9,7 @@ import type { NextPage, GetStaticPaths, GetStaticProps } from 'next'
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: [{ params: { gameName: 'tic-tac-toe' } }, { params: { gameName: 'space-shooter' } }],
-    fallback: false
+    fallback: false // false: any paths not returned here will result in a 404 page
   }
 }
 
@@ -36,13 +36,12 @@ export const getStaticProps: GetStaticProps = async context => {
 interface Props {
   game: {
     nameForTitle: string
-    nameForUrl: 'tic-tac-toe' | 'space-shooter'
+    nameForUrl: 'tic-tac-toe'
   }
 }
 
 const games = {
-  'tic-tac-toe': <TicTacToe />,
-  'space-shooter': <SpaceShooter />
+  'tic-tac-toe': <TicTacToe />
 }
 
 const Game: NextPage<Props> = ({ game: { nameForTitle, nameForUrl } }) => {
