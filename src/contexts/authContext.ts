@@ -1,15 +1,18 @@
 import React from 'react'
 
-import { User as FirebaseUser } from 'firebase/auth'
+import type { User as FirebaseUser } from 'firebase/auth'
+
+export interface GameStats {
+  matches: number
+  score: number
+  wins: number
+  losses: number
+  maxWinStreak: number
+  currentWinStreak: number
+}
 
 export interface User extends FirebaseUser {
-  ticTacToe: {
-    score: number
-    wins: number
-    losses: number
-    currentWinStreak: number
-    maxWinStreak: number
-  }
+  ticTacToe: GameStats
 }
 
 export interface IAuthContext {
