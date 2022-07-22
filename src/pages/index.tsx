@@ -12,6 +12,7 @@ import styles from '@styles/pages/home.module.css'
 import type { NextPage } from 'next'
 
 const ticTacToe = {
+  matches: 0,
   score: 0,
   wins: 0,
   losses: 0,
