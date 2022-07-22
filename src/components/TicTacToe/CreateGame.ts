@@ -273,6 +273,7 @@ const CreateGame = (
       const isWinner = results.winner.name === user.displayName
       await updateDoc(['users'], user.displayName as string, {
         ticTacToe: {
+          match: user.ticTacToe.matches + 1,
           score: isWinner ? user.ticTacToe.score + 30 : user.ticTacToe.score - 15,
           wins: isWinner ? user.ticTacToe.wins + 1 : user.ticTacToe.wins,
           losses: isWinner ? user.ticTacToe.losses : user.ticTacToe.losses + 1,

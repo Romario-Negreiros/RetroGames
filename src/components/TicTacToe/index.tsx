@@ -153,6 +153,7 @@ const TicTacToe: React.FC = () => {
               await deleteDoc(['games', 'tic-tac-toe', 'matches'], `${game.getP1()?.name} x ${game.getP2()?.name}`)
               await updateDoc(['users'], user?.displayName as string, {
                 ticTacToe: {
+                  matches: user?.ticTacToe.matches as number + 1,
                   score: user?.ticTacToe.score as number - 15,
                   wins: user?.ticTacToe.wins,
                   losses: user?.ticTacToe.losses as number + 1,
