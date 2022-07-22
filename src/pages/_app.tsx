@@ -5,14 +5,16 @@ import { useFirestore } from '@utils/hooks'
 
 import { Layout, Toast } from '../components'
 
-import toastContext, { IToast } from '@contexts/toastContext'
-import authContext, { User } from '@contexts/authContext'
+import toastContext from '@contexts/toastContext'
+import authContext from '@contexts/authContext'
 
 import '@styles/common/reset.css'
 import '@styles/common/variables.css'
 import '@styles/common/global.css'
 
 import type { AppProps } from 'next/app'
+import type { IToast } from '@contexts/toastContext'
+import type { User } from '@contexts/authContext'
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const [user, setUser] = React.useState<User | null>(null)
