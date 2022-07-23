@@ -76,6 +76,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
 const Leaderboard: NextPage<Props> = ({ users, gameName, serverSideError }) => {
   const [error, setError] = React.useState(serverSideError)
+  const [searchValue, setSearchValue] = React.useState('')
   const { user: currentUser } = useAuth()
 
   if (error) {
@@ -96,7 +97,13 @@ const Leaderboard: NextPage<Props> = ({ users, gameName, serverSideError }) => {
           <p>CWS = Current Win Streak </p>
         </div>
         <div className={styles.input_container}>
-          <input type="search" placeholder="Search player..." className="input" />
+          <input
+            type="search"
+            value={searchValue}
+            onChange={e => setSearchValue(e.currentTarget.value)}
+            placeholder="Search player..."
+            className="input"
+          />
         </div>
       </section>
       <section className={styles.table_container}>
@@ -128,21 +135,43 @@ const Leaderboard: NextPage<Props> = ({ users, gameName, serverSideError }) => {
                 <td>{currentUser?.[GamesNamesForQuery[gameName]].maxWinStreak}</td>
               </tr>
             )}
-            {users.map((user, index) => (
-              <tr key={user.name}>
-                <td>#{index + 1}</td>
-                <td>
-                  <Link href={`/users/${user.name}`}>
-                    <a>{user.name}</a>
-                  </Link>
-                </td>
-                <td>{user.score}</td>
-                <td>{user.wins}</td>
-                <td>{user.losses}</td>
-                <td>{user.currentWinStreak}</td>
-                <td>{user.maxWinStreak}</td>
-              </tr>
-            ))}
+            {users.map((user, index) => {
+              if (searchValue) {
+                if (user.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())) {
+                  return (
+                    <tr key={user.name}>
+                      <td>#{index + 1}</td>
+                      <td>
+                        <Link href={`/users/${user.name}`}>
+                          <a>{user.name}</a>
+                        </Link>
+                      </td>
+                      <td>{user.score}</td>
+                      <td>{user.wins}</td>
+                      <td>{user.losses}</td>
+                      <td>{user.currentWinStreak}</td>
+                      <td>{user.maxWinStreak}</td>
+                    </tr>
+                  )
+                } else return null
+              } else {
+                return (
+                  <tr key={user.name}>
+                    <td>#{index + 1}</td>
+                    <td>
+                      <Link href={`/users/${user.name}`}>
+                        <a>{user.name}</a>
+                      </Link>
+                    </td>
+                    <td>{user.score}</td>
+                    <td>{user.wins}</td>
+                    <td>{user.losses}</td>
+                    <td>{user.currentWinStreak}</td>
+                    <td>{user.maxWinStreak}</td>
+                  </tr>
+                )
+              }
+            })}
           </tbody>
         </table>
       </section>
