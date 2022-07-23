@@ -55,8 +55,8 @@ const Header: React.FC = () => {
           </li>
           {user && (
             <li onClick={handleOpenOrCloseMobileMenu}>
-              <Link href={`/players/${user.displayName}`}>
-                <a>{user.displayName}</a>
+              <Link href={`/users/${user.displayName}`}>
+                <a>{`${user.displayName?.charAt(0).toLocaleUpperCase()}${user.displayName?.slice(1)}`}</a>
               </Link>
             </li>
           )}
