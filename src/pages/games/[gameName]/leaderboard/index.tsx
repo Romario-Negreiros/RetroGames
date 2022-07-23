@@ -1,103 +1,90 @@
+import React from 'react'
+import { useFirestore, useAuth } from '@utils/hooks'
+
+import { Error } from '../../../../components'
 import Link from 'next/link'
 
 import styles from '@styles/pages/leaderboard.module.css'
 
-import type { NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
+import type { GameStats } from '@contexts/authContext'
 
-const users = [
-  {
-    position: 1,
-    name: 'Romario',
-    score: 2323565,
-    wins: 123,
-    losses: 21,
-    currentWinStreak: 19,
-    maxWinStreak: 74
-  },
-  {
-    position: 2,
-    name: 'Romario',
-    score: 2323565,
-    wins: 123,
-    losses: 21,
-    currentWinStreak: 19,
-    maxWinStreak: 74
-  },
-  {
-    position: 3,
-    name: 'Romario',
-    score: 2323565,
-    wins: 123,
-    losses: 21,
-    currentWinStreak: 19,
-    maxWinStreak: 74
-  },
-  {
-    position: 4,
-    name: 'Romario',
-    score: 2323565,
-    wins: 123,
-    losses: 21,
-    currentWinStreak: 19,
-    maxWinStreak: 74
-  },
-  {
-    position: 5,
-    name: 'Romario',
-    score: 2323565,
-    wins: 123,
-    losses: 21,
-    currentWinStreak: 19,
-    maxWinStreak: 74
-  },
-  {
-    position: 6,
-    name: 'Romario',
-    score: 2323565,
-    wins: 123,
-    losses: 21,
-    currentWinStreak: 19,
-    maxWinStreak: 74
-  },
-  {
-    position: 7,
-    name: 'Romario',
-    score: 2323565,
-    wins: 123,
-    losses: 21,
-    currentWinStreak: 19,
-    maxWinStreak: 74
-  },
-  {
-    position: 8,
-    name: 'Romario',
-    score: 2323565,
-    wins: 123,
-    losses: 21,
-    currentWinStreak: 19,
-    maxWinStreak: 74
-  },
-  {
-    position: 9,
-    name: 'Romario',
-    score: 2323565,
-    wins: 123,
-    losses: 21,
-    currentWinStreak: 19,
-    maxWinStreak: 74
-  },
-  {
-    position: 10,
-    name: 'Romario',
-    score: 2323565,
-    wins: 123,
-    losses: 21,
-    currentWinStreak: 19,
-    maxWinStreak: 74
+type GamesNames = 'tic-tac-toe'
+
+enum GamesNamesForQuery {
+  'tic-tac-toe' = 'ticTacToe'
+}
+
+type Games = Record<GamesNamesForQuery, GameStats>
+
+interface User extends GameStats {
+  name: string
+}
+
+interface Props {
+  users: Array<User>
+  gameName: GamesNames
+  serverSideError?: string
+}
+
+export const getServerSideProps: GetServerSideProps = async context => {
+  const gameName = context.params?.gameName as GamesNames | null
+
+  if (!gameName) {
+    return {
+      props: {
+        serverSideError: 'Game name parameter not found!'
+      }
+    }
   }
-]
 
-const Leaderboard: NextPage = () => {
+  const firestoreFunctions = useFirestore
+  const { getDocs } = firestoreFunctions()
+
+  const results = await getDocs<Games>(['users'], [`${GamesNamesForQuery[gameName]}.matches`, '>', 0])
+  if (results.empty) {
+    return {
+      props: {
+        serverSideError: 'No user found!'
+      }
+    }
+  }
+
+  const users = results.docs.map(doc => {
+    return {
+      name: doc.id,
+      ...doc.data()[GamesNamesForQuery[gameName]]
+    }
+  })
+
+  users.sort((a, b) => {
+    if (a.score > b.score) {
+      return -1
+    } else if (a.score < b.score) {
+      return 1
+    }
+    return 0
+  })
+
+  return {
+    props: {
+      users,
+      gameName
+    }
+  }
+}
+
+const Leaderboard: NextPage<Props> = ({ users, gameName, serverSideError }) => {
+  const [error, setError] = React.useState(serverSideError)
+  const { user: currentUser } = useAuth()
+
+  if (error) {
+    return (
+      <main className="main_container full_screen_height_wrapper">
+        <Error error={error} setError={serverSideError ? undefined : setError} />
+      </main>
+    )
+  }
   return (
     <main className={`main_container full_screen_height_wrapper ${styles.container}`}>
       <section className={styles.top_container}>
@@ -126,32 +113,34 @@ const Leaderboard: NextPage = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className={styles.current_user_position}>
-              <td>#1546</td>
-              <td>
-                <Link href={`/users/${'oasdfghj cnvmsfedopl'}`}>
-                  <a>{'oasdfghj cnvmsfedopl'}</a>
-                </Link>
-              </td>
-              <td>2456</td>
-              <td>14</td>
-              <td>5</td>
-              <td>0</td>
-              <td>2</td>
-            </tr>
-            {users.map(data => (
-              <tr key={data.position}>
-                <td>#{data.position}</td>
+            {users.some(user => user.name === currentUser?.displayName) && (
+              <tr className={styles.current_user_position}>
+                <td>#{users.findIndex(user => user.name === currentUser?.displayName) + 1}</td>
                 <td>
-                  <Link href={`/users/${data.name}`}>
-                    <a>{data.name}</a>
+                  <Link href={`/users/${currentUser?.displayName}`}>
+                    <a>You</a>
                   </Link>
-                </td>{' '}
-                <td>{data.score}</td>
-                <td>{data.wins}</td>
-                <td>{data.losses}</td>
-                <td>{data.currentWinStreak}</td>
-                <td>{data.maxWinStreak}</td>
+                </td>
+                <td>{currentUser?.[GamesNamesForQuery[gameName]].score}</td>
+                <td>{currentUser?.[GamesNamesForQuery[gameName]].wins}</td>
+                <td>{currentUser?.[GamesNamesForQuery[gameName]].losses}</td>
+                <td>{currentUser?.[GamesNamesForQuery[gameName]].currentWinStreak}</td>
+                <td>{currentUser?.[GamesNamesForQuery[gameName]].maxWinStreak}</td>
+              </tr>
+            )}
+            {users.map((user, index) => (
+              <tr key={user.name}>
+                <td>#{index + 1}</td>
+                <td>
+                  <Link href={`/users/${user.name}`}>
+                    <a>{user.name}</a>
+                  </Link>
+                </td>
+                <td>{user.score}</td>
+                <td>{user.wins}</td>
+                <td>{user.losses}</td>
+                <td>{user.currentWinStreak}</td>
+                <td>{user.maxWinStreak}</td>
               </tr>
             ))}
           </tbody>
