@@ -137,3 +137,7 @@ form a:hover {
   border-radius: 10px;
   background-color: var(--secondary-hover);
 }
+
+input[type="search"]::-webkit-search-cancel-button {
+  cursor: pointer;
+}
