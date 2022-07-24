@@ -15,6 +15,9 @@
 The idea of RetroGames is to reproduce old and classic games and make them
 playable online!
 
+The project is currently working, but just with one game so far, as the time goes by, I intend
+to expand the project and add more games to be played.
+
 ## Table of contents
 
 - [Screenshots](#screenshots)
@@ -40,8 +43,8 @@ Soon...
 - [ ] Games
  - [x] Tic Tac Toe
  - [ ] Soon...
-- [ ] Leaderboards
-- [ ] Players profiles
+- [x] Leaderboards
+- [x] Players profiles
 
 ## Packages
 
