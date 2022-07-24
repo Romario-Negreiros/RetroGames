@@ -3,7 +3,7 @@ import firebase from '../libs/firebase'
 import { handleError } from '@utils/handlers'
 import { useFirestore } from '@utils/hooks'
 
-import { Layout, Toast } from '../components'
+import { AuthChecker, Layout, Toast } from '../components'
 
 import toastContext from '@contexts/toastContext'
 import authContext from '@contexts/authContext'
@@ -51,7 +51,9 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       <toastContext.Provider value={{ toast, setToast }}>
         <Layout>
           <Toast />
-          <Component {...pageProps} />
+          <AuthChecker user={user}>
+            <Component {...pageProps} />
+          </AuthChecker>
         </Layout>
       </toastContext.Provider>
     </authContext.Provider>
