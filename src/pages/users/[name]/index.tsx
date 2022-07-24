@@ -6,7 +6,7 @@ import { Error } from '../../../components'
 import styles from '@styles/pages/userProfile.module.css'
 
 import type { GetServerSideProps, NextPage } from 'next'
-import type { User } from '@contexts/authContext'
+import type { GameStats } from '@contexts/authContext'
 
 type Games = 'ticTacToe'
 
@@ -16,10 +16,14 @@ const gamesNamesForTitle = {
   ticTacToe: 'Tic Tac Toe'
 }
 
+type UserGamesStats = Record<Games, GameStats>
+
+interface User extends UserGamesStats {
+  name: string
+}
+
 interface Props {
-  user: {
-    name: string
-  } & Pick<User, 'ticTacToe'>
+  user: User
   serverSideError?: string
 }
 
@@ -37,7 +41,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
   const firestoreFunctions = useFirestore
   const { getDoc } = firestoreFunctions()
 
-  const doc = await getDoc<Pick<User, 'ticTacToe'>>(['users'], name)
+  const doc = await getDoc<UserGamesStats>(['users'], name)
   if (!doc.exists()) {
     return {
       props: {
