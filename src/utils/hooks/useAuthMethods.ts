@@ -12,7 +12,7 @@ const useAuthMethods = () => {
 
   const sendSignInLinkToEmail = async (email: string, name?: string) => {
     const actionCodeSettings: ActionCodeSettings = {
-      url: name ? `http://localhost:3000/?name=${name}` : 'http://localhost:3000',
+      url: name ? `https://retrogames-green.vercel.app/?name=${name}` : 'https://retrogames-green.vercel.app',
       handleCodeInApp: true
     }
 
