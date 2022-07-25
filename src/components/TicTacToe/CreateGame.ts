@@ -288,6 +288,7 @@ const CreateGame = (
   const getP1 = () => players?.p1
   const getP2 = () => players?.p2
   const getResults = () => results
+  const getBoard = () => board
 
   const unsubscribeFromListener = () => unsubscribe && unsubscribe()
 
@@ -313,6 +314,7 @@ const CreateGame = (
     getP1,
     getP2,
     getResults,
+    getBoard,
     unsubscribeFromListener,
     setMovement,
     endMatchDueToInactivity,

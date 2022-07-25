@@ -14,7 +14,7 @@ const CreateCanvas = () => {
     }
   }
 
-  const drawBoard = (canvasDimensions: CanvasDimensions, ctx: CanvasRenderingContext2D) => {
+  const drawBoard = (canvasDimensions: CanvasDimensions, ctx: CanvasRenderingContext2D, board?: Array<Array<string>>) => {
     const { width, height } = canvasDimensions
 
     ctx.beginPath()
@@ -36,6 +36,21 @@ const CreateCanvas = () => {
     ctx.moveTo(0, height - height / 3)
     ctx.lineTo(width, height - height / 3)
     ctx.stroke()
+
+    if (board) {
+      const cellsCenterCoordinates = getCellsCenterCoordinates(width, height)
+      board.forEach((row, rowIndex) => {
+        row.forEach((col, colIndex) => {
+          if (col) {
+            if (col === 'X') {
+              drawX(ctx, cellsCenterCoordinates[rowIndex][colIndex], width / 3)
+            } else {
+              drawO(ctx, cellsCenterCoordinates[rowIndex][colIndex], width / 3)
+            }
+          }
+        })
+      })
+    }
   }
 
   const reset = (canvas: HTMLCanvasElement) => {

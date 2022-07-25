@@ -43,10 +43,7 @@ const TicTacToe: React.FC = () => {
     []
   )
 
-  const handleClickOnCanvas = async (
-    event: React.MouseEvent<HTMLCanvasElement>,
-    canvasDimensions: CanvasDimensions
-  ) => {
+  const handleClickOnCanvas = async (event: React.MouseEvent<HTMLCanvasElement>) => {
     const { x, y } = event.currentTarget.getBoundingClientRect()
     const { clientX, clientY } = event
     const mouseXPositionRelativeToCanvas = clientX - x
@@ -80,7 +77,7 @@ const TicTacToe: React.FC = () => {
       const ctx = canvasElement.getContext('2d')
       if (ctx) {
         canvas.resize(canvasElement)
-        canvas.drawBoard({ width, height }, ctx)
+        canvas.drawBoard({ width, height }, ctx, game.getBoard())
       }
     }
   }, 500)
@@ -153,10 +150,10 @@ const TicTacToe: React.FC = () => {
               await deleteDoc(['games', 'tic-tac-toe', 'matches'], `${game.getP1()?.name} x ${game.getP2()?.name}`)
               await updateDoc(['users'], user?.displayName as string, {
                 ticTacToe: {
-                  matches: user?.ticTacToe.matches as number + 1,
-                  score: user?.ticTacToe.score as number - 15,
+                  matches: (user?.ticTacToe.matches as number) + 1,
+                  score: (user?.ticTacToe.score as number) - 15,
                   wins: user?.ticTacToe.wins,
-                  losses: user?.ticTacToe.losses as number + 1,
+                  losses: (user?.ticTacToe.losses as number) + 1,
                   currentWinStreak: 0,
                   maxWinStreak: user?.ticTacToe.maxWinStreak
                 }
@@ -166,7 +163,7 @@ const TicTacToe: React.FC = () => {
         }
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeoutID, gameState])
 
   React.useEffect(() => {
@@ -238,7 +235,7 @@ const TicTacToe: React.FC = () => {
       )}
       <canvas
         style={{ cursor: turn?.name === user?.displayName ? 'pointer' : 'not-allowed' }}
-        onClick={event => (turn?.name === user?.displayName ? handleClickOnCanvas(event, canvasDimensions) : '')}
+        onClick={event => (turn?.name === user?.displayName ? handleClickOnCanvas(event) : '')}
       >
         <p>Sorry but your browser doesn&aphos;t support the game!</p>
       </canvas>
