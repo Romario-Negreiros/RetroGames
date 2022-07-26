@@ -67,12 +67,12 @@ const CreateCanvas = () => {
     const _360degInRad = Math.PI * 2
     const { x, y } = cellCenterCoordinates
     ctx.beginPath()
-    ctx.arc(x, y, cellWidth / 3, _0degInRad, _360degInRad)
+    ctx.arc(x, y, cellWidth / 4, _0degInRad, _360degInRad)
     ctx.stroke()
   }
 
   const drawX = (ctx: CanvasRenderingContext2D, cellCenterCoordinates: { x: number; y: number }, cellWidth: number) => {
-    const _30PercentOffCelWidth = (cellWidth / 100) * 30
+    const _30PercentOffCelWidth = (cellWidth / 100) * 20
     const { x, y } = cellCenterCoordinates
     ctx.beginPath()
     ctx.moveTo(x + _30PercentOffCelWidth, y - _30PercentOffCelWidth)
@@ -87,8 +87,8 @@ const CreateCanvas = () => {
     cellsCenterCoordinates[0][0] = { x: width / 3 / 2, y: height / 3 / 2 }
     cellsCenterCoordinates[0][1] = { x: width / 2, y: height / 3 / 2 }
     cellsCenterCoordinates[0][2] = { x: width - width / 3 / 2, y: height / 3 / 2 }
-    cellsCenterCoordinates[1][0] = { x: width / 3 / 2, y: width / 2 }
-    cellsCenterCoordinates[1][1] = { x: width / 2, y: width / 2 }
+    cellsCenterCoordinates[1][0] = { x: width / 3 / 2, y: height / 2 }
+    cellsCenterCoordinates[1][1] = { x: width / 2, y: height / 2 }
     cellsCenterCoordinates[1][2] = { x: width - width / 3 / 2, y: height / 2 }
     cellsCenterCoordinates[2][0] = { x: width / 3 / 2, y: height - height / 3 / 2 }
     cellsCenterCoordinates[2][1] = { x: width / 2, y: height - height / 3 / 2 }
