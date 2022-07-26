@@ -70,15 +70,13 @@ const TicTacToe: React.FC = () => {
   }
 
   const handleWindowResize = throttle(() => {
-    if (window.innerWidth < 440) {
-      const canvasElement = document.querySelector('canvas') as HTMLCanvasElement
-      const { width, height } = canvasElement.getBoundingClientRect()
-      setCanvasDimensions({ width, height })
-      const ctx = canvasElement.getContext('2d')
-      if (ctx) {
-        canvas.resize(canvasElement)
-        canvas.drawBoard({ width, height }, ctx, game.getBoard())
-      }
+    const canvasElement = document.querySelector('canvas') as HTMLCanvasElement
+    const { width, height } = canvasElement.getBoundingClientRect()
+    setCanvasDimensions({ width, height })
+    const ctx = canvasElement.getContext('2d')
+    if (ctx) {
+      canvas.resize(canvasElement)
+      canvas.drawBoard({ width, height }, ctx, game.getBoard())
     }
   }, 500)
 
