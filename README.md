@@ -31,7 +31,8 @@ to expand the project and add more games to be played.
 
 [(Back to top)](#table-of-contents)
 
-Soon...
+Home page snapshot
+![Home page snapshot](./public/retrogames-snapshot.png)
 
 ## Progress
 
