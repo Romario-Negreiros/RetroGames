@@ -1,0 +1,37 @@
+.games_list {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.games_list li {
+  align-self: baseline;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: center;
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 3px;
+  background-color: var(--tertiary-bg);
+}
+
+.games_list li h2 {
+  font-size: clamp(1.8rem, 2.5vw, 2.2rem);
+  color: var(--primary-font);
+}
+
+@media screen and (min-width: 400px) {
+  .games_list li {
+    padding: 1rem;
+  }
+}
+
+@media screen and (min-width: 650px) {
+  .games_list li {
+    width: 48%;
+  }
+}
