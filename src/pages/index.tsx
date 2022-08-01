@@ -3,13 +3,12 @@ import firebase from '../libs/firebase'
 import { useToast, useAuthMethods, useFirestore, useAuth } from '@utils/hooks'
 import { handleError } from '@utils/handlers'
 
-import games from '@static/games.json'
-
-import { GameCard } from '../components'
+import Image from 'next/image'
 
 import styles from '@styles/pages/home.module.css'
 
 import type { NextPage } from 'next'
+import Link from 'next/link'
 
 const ticTacToe = {
   matches: 0,
@@ -51,15 +50,19 @@ const Home: NextPage = () => {
 
   return (
     <main className={`main_container full_screen_height_wrapper ${styles.container}`}>
-      <h1>
-        Choose a game, play against other people, have fun and, maybe, get a good placement on the leaderboards...
-        <span>Just for bragging</span>
-      </h1>
-      <ul className={styles.games_list}>
-        {games.map(game => (
-          <GameCard key={game.name} game={game} />
-        ))}
-      </ul>
+      <div>
+        <h1>Retro<span>Games</span></h1>
+        <p>
+          Choose a game, play against other people, have fun and, maybe, get a good placement on the leaderboards...<br />
+          <span>Just for bragging</span>
+        </p>
+        <Link href="/games">
+          <a className="button">Browse games</a>
+        </Link>
+      </div>
+      <div className={styles.imageWrapper}>
+        <Image src="/gaming.svg" alt="Gaming illustration" layout="fill" />
+      </div>
     </main>
   )
 }
