@@ -10,7 +10,7 @@ interface Props {
   user: User | null
 }
 
-const forbiddenPaths = ['/games', '/users']
+const forbiddenPaths = ['/games/', '/users']
 
 const AuthChecker: React.FC<Props> = ({ children, user }) => {
   const { pathname } = useRouter()
