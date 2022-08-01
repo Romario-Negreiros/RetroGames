@@ -53,6 +53,11 @@ const Header: React.FC = () => {
               <a>Home</a>
             </Link>
           </li>
+          <li onClick={handleOpenOrCloseMobileMenu}>
+            <Link href="/games">
+              <a>Games</a>
+            </Link>
+          </li>
           {user && (
             <li onClick={handleOpenOrCloseMobileMenu}>
               <Link href={`/users/${user.displayName}`}>
